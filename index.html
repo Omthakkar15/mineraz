@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -59,170 +59,6 @@ body {
   position: relative;
 }
 
-/* ---------- Site header (Mineraz storefront style) ---------- */
-.site-header {
-  width: 100%;
-  font-family: 'Inter', system-ui, sans-serif;
-}
-
-.announce-bar {
-  background: #d8b3a5;
-  color: #fffaf6;
-  text-align: center;
-  padding: 0.5rem 1rem;
-}
-
-.announce-text {
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.announce-dot {
-  color: #fff;
-  font-size: 0.6rem;
-  opacity: 0.85;
-}
-
-.site-nav--logo-only {
-  justify-content: center;
-}
-
-.site-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.25rem;
-  padding: 0.6rem 1.5rem;
-  background: rgba(255, 251, 247, 0.92);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(190, 150, 100, 0.22);
-  box-shadow: 0 6px 20px rgba(45, 31, 22, 0.06);
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-
-.site-logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.logo-name {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: var(--text-primary);
-}
-
-.logo-script {
-  font-family: 'Great Vibes', cursive;
-  font-size: 1.05rem;
-  color: var(--accent-gold);
-  margin-top: -0.1rem;
-  letter-spacing: 0.02em;
-}
-
-.nav-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem 1.05rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  flex: 1;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: rgba(44, 26, 14, 0.82);
-  font-size: 0.85rem;
-  font-weight: 500;
-  white-space: nowrap;
-  padding: 0.25rem 0;
-  border-bottom: 1.5px solid transparent;
-  transition: color 0.18s, border-color 0.18s;
-}
-
-.nav-links a:hover {
-  color: var(--accent-gold);
-  border-bottom-color: var(--accent-gold);
-}
-
-.nav-icons {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  flex-shrink: 0;
-}
-
-.nav-icon-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
-  border: none;
-  background: none;
-  color: rgba(44, 26, 14, 0.8);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.18s, color 0.18s;
-}
-
-.nav-icon-btn svg {
-  width: 1.2rem;
-  height: 1.2rem;
-}
-
-.nav-icon-btn:hover {
-  background: rgba(190, 150, 100, 0.16);
-  color: var(--text-primary);
-}
-
-@media (max-width: 980px) {
-  .nav-links {
-    gap: 0.3rem 0.7rem;
-  }
-  .nav-links a {
-    font-size: 0.78rem;
-  }
-  .logo-name {
-    font-size: 1.35rem;
-  }
-}
-
-@media (max-width: 720px) {
-  .site-nav {
-    flex-wrap: wrap;
-    gap: 0.6rem 1rem;
-    padding: 0.6rem 1rem;
-  }
-  .nav-links {
-    order: 3;
-    flex-basis: 100%;
-    justify-content: flex-start;
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.15rem;
-  }
-  .nav-links a {
-    white-space: nowrap;
-  }
-}
-
 .app-container {
   position: relative;
   z-index: 1;
@@ -236,34 +72,6 @@ body {
   .app-container {
     padding: 2.5rem 1.5rem;
   }
-}
-
-.app-header {
-  margin-bottom: 2rem;
-}
-
-.app-header h1 {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: 1.875rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  margin: 0;
-  color: var(--text-primary);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-@media (min-width: 768px) {
-  .app-header h1 {
-    font-size: 2.25rem;
-  }
-}
-
-.app-subtitle {
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: rgba(44, 26, 14, 0.5);
-  margin: 0.25rem 0 0;
 }
 
 .app-main-grid {
@@ -464,8 +272,25 @@ body {
   border: 2px solid rgba(201, 169, 110, 0.25);
   isolation: isolate;
   background: #efe5d8;
-  touch-action: none;
+  touch-action: pan-y pinch-zoom;
   box-shadow: 0 14px 36px rgba(45, 31, 22, 0.14), 0 2px 10px rgba(45, 31, 22, 0.08);
+}
+
+.face-frame.face-frame--gesture-lock {
+  touch-action: none;
+}
+
+@media (max-width: 768px) {
+  .face-frame {
+    max-height: 58vh;
+  }
+
+  .face-frame #faceImage {
+    max-height: 58vh;
+    width: 100%;
+    object-fit: contain;
+    background: #efe5d8;
+  }
 }
 
 .face-frame.cursor-none {
@@ -545,6 +370,80 @@ body {
   text-align: center;
   max-width: 20rem;
   margin: 0;
+}
+
+.mobile-scroll-hint {
+  display: none;
+  font-size: 0.68rem;
+  color: rgba(44, 26, 14, 0.45);
+  text-align: center;
+  margin: 0;
+  max-width: 20rem;
+  line-height: 1.35;
+}
+
+.mobile-scroll-rail {
+  display: none;
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 45;
+  width: 2rem;
+  padding: 0.85rem 0.35rem;
+  border-radius: 10px 0 0 10px;
+  background: rgba(255, 252, 248, 0.94);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-right: none;
+  box-shadow: -4px 0 14px rgba(45, 31, 22, 0.1);
+  touch-action: pan-y;
+  user-select: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: grab;
+}
+
+.mobile-scroll-rail.is-dragging {
+  cursor: grabbing;
+  background: rgba(255, 252, 248, 1);
+}
+
+.mobile-scroll-rail-grip {
+  width: 0.28rem;
+  height: 2.2rem;
+  border-radius: 999px;
+  background: rgba(201, 169, 110, 0.65);
+}
+
+.mobile-scroll-rail-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.5);
+  font-weight: 600;
+}
+
+@media (max-width: 768px), (pointer: coarse) {
+  .mobile-scroll-hint {
+    display: block;
+  }
+
+  .mobile-scroll-rail {
+    display: flex;
+  }
+}
+
+@media (min-width: 769px) and (pointer: fine) {
+  .mobile-scroll-hint {
+    display: none !important;
+  }
+
+  .mobile-scroll-rail {
+    display: none !important;
+  }
 }
 
 /* ---------- Loading / error ---------- */
@@ -770,6 +669,12 @@ body {
   margin: 0 0 1rem;
 }
 
+.owner-unlock-zone {
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 .shade-selector-grid {
   display: flex;
   flex-wrap: wrap;
@@ -946,16 +851,6 @@ body {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
-  .app-header {
-    text-align: center;
-    margin-bottom: 1.25rem;
-  }
-
-  .app-header h1 {
-    font-size: 2rem;
-    letter-spacing: 0.22em;
-  }
-
   .right-panel {
     order: -1;
   }
@@ -967,10 +862,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  .app-header h1 {
-    font-size: 1.75rem;
-  }
-
   .powder-swatch-pan {
     width: 2.4rem;
     height: 2.4rem;
@@ -1153,6 +1044,22 @@ body {
   color: rgba(44, 26, 14, 0.75);
 }
 
+.admin-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .admin-bar-actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 .admin-bar[hidden] {
   display: none !important;
 }
@@ -1174,6 +1081,32 @@ body {
 
 .admin-save-btn:hover {
   background: #b8924f;
+}
+
+.admin-save-btn:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.admin-close-btn {
+  padding: 0.4rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 252, 248, 0.95);
+  color: rgba(44, 26, 14, 0.75);
+  border: 1px solid rgba(190, 150, 100, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.admin-close-btn:hover {
+  background: rgba(255, 252, 248, 1);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
 }
 
 .admin-lock-note {
@@ -1254,8 +1187,47 @@ body {
 
 .admin-modal-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.65rem;
   justify-content: center;
+}
+
+.admin-modal-link-btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.55);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-modal-link-btn:hover {
+  color: var(--accent-gold);
+}
+
+.admin-change-pwd-btn {
+  padding: 0.4rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 252, 248, 0.95);
+  color: rgba(44, 26, 14, 0.75);
+  border: 1px solid rgba(190, 150, 100, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.admin-change-pwd-btn:hover {
+  background: rgba(255, 252, 248, 1);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
 }
 
 .shade-editor-modal {
@@ -1359,26 +1331,15 @@ body {
   </head>
   <body>
     <div class="app-shell">
-      <!-- Site header (Mineraz storefront style) -->
-      <header class="site-header">
-        <nav class="site-nav site-nav--logo-only" aria-label="Main navigation">
-          <a class="site-logo" href="https://mineraz.com" target="_blank" rel="noopener noreferrer">
-            <span class="logo-name">MINERAZ</span>
-            <span class="logo-script">by Adi Galin</span>
-          </a>
-        </nav>
-      </header>
-
       <div class="app-container">
-        <header class="app-header" id="appHeader">
-          <h1 id="ownerUnlockTarget">MINERAZ</h1>
-          <p class="app-subtitle">Your Skin Analysis Results</p>
-        </header>
-
         <div class="admin-bar" id="adminBar" hidden>
           <span>Owner mode — click a foundation shade to edit color &amp; transparency</span>
           <span class="admin-lock-note" id="adminLockNote"></span>
-          <button type="button" class="admin-save-btn" id="adminSaveBtn">Save colors</button>
+          <div class="admin-bar-actions">
+            <button type="button" class="admin-save-btn" id="adminSaveBtn">Save colors</button>
+            <button type="button" class="admin-change-pwd-btn" id="adminChangePwdBtn">Change password</button>
+            <button type="button" class="admin-close-btn" id="adminCloseBtn">Close</button>
+          </div>
         </div>
 
         <div class="paint-controls-bar">
@@ -1440,12 +1401,13 @@ body {
 
               <!-- Photo + canvases (shown when image loaded) -->
               <div class="photo-stage" id="photoStage" hidden>
+                <p class="status-text mobile-scroll-hint" id="mobileScrollHint">Swipe up/down on photo to scroll · use the scroll tab on the right · drag sideways to paint</p>
                 <div class="face-frame" id="paintArea">
                   <img id="faceImage" alt="Face for skin analysis" draggable="false" />
                   <canvas id="paintCanvas" class="layer makeup-paint-layer"></canvas>
                   <canvas id="overlayCanvas" class="layer"></canvas>
-                  <!-- <img id="brushCursor" class="brush-cursor" src="{{ 'brush.png' | asset_url }}" alt="" draggable="false" hidden /> -->
-                  <img id="brushCursor" class="brush-cursor" src="assets/brush.png" alt="" draggable="false" hidden />
+                  <img id="brushCursor" class="brush-cursor" src="{{ 'brush.png' | asset_url }}" alt="" draggable="false" hidden />
+                  <!-- <img id="brushCursor" class="brush-cursor" src="assets/brush.png" alt="" draggable="false" hidden /> -->
                   <div id="eraseCursor" class="erase-cursor" hidden></div>
                 </div>
 
@@ -1496,12 +1458,14 @@ body {
 
         <!-- Shade selector -->
         <section class="shade-selector-section">
-          <div class="divider-row">
-            <div class="divider-ornament"></div>
-            <h2 class="selector-title">Choose Your Shade</h2>
-            <div class="divider-ornament"></div>
+          <div class="owner-unlock-zone" id="ownerUnlockTarget">
+            <div class="divider-row">
+              <div class="divider-ornament"></div>
+              <h2 class="selector-title">Choose Your Shade</h2>
+              <div class="divider-ornament"></div>
+            </div>
+            <p class="selector-hint" id="selectorHint">Upload your photo first, then select a shade to paint</p>
           </div>
-          <p class="selector-hint" id="selectorHint">Upload your photo first, then select a shade to paint</p>
           <div class="shade-selector-grid" id="shadeGrid"></div>
         </section>
 
@@ -1510,16 +1474,49 @@ body {
       </div>
     </div>
 
+    <div class="mobile-scroll-rail" id="mobileScrollRail" aria-label="Scroll page" title="Drag to scroll">
+      <span class="mobile-scroll-rail-grip" aria-hidden="true"></span>
+      <span class="mobile-scroll-rail-label">Scroll</span>
+    </div>
+
     <!-- Admin password modal -->
     <div class="admin-modal-backdrop" id="adminPasswordBackdrop" hidden>
       <div class="admin-modal" role="dialog" aria-labelledby="adminPasswordTitle">
-        <h3 id="adminPasswordTitle">Owner access</h3>
-        <p>Enter password to edit foundation shades</p>
-        <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="current-password" />
-        <p class="admin-modal-error" id="adminPasswordError" hidden></p>
-        <div class="admin-modal-actions">
-          <button type="button" class="btn btn-primary" id="adminPasswordSubmit">Unlock</button>
-          <button type="button" class="btn btn-outline" id="adminPasswordCancel">Cancel</button>
+        <div id="adminUnlockPanel">
+          <h3 id="adminPasswordTitle">Owner access</h3>
+          <p id="adminPasswordDesc">Enter password to edit foundation shades</p>
+          <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="current-password" />
+          <p class="admin-modal-error" id="adminPasswordError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminPasswordSubmit">Unlock</button>
+            <button type="button" class="btn btn-outline" id="adminPasswordCancel">Cancel</button>
+          </div>
+          <button type="button" class="admin-modal-link-btn" id="adminPasswordChangeBtn">Change password</button>
+        </div>
+
+        <div id="adminChangeOldPanel" hidden>
+          <h3>Change password</h3>
+          <p>Enter your current password</p>
+          <input type="password" id="adminOldPasswordInput" placeholder="Current password" autocomplete="current-password" />
+          <p class="admin-modal-error" id="adminChangeOldError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminChangeOldNext">Next</button>
+            <button type="button" class="btn btn-outline" id="adminChangeOldBack">Back</button>
+            <button type="button" class="btn btn-outline" id="adminChangeOldCancel">Cancel</button>
+          </div>
+        </div>
+
+        <div id="adminChangeNewPanel" hidden>
+          <h3>Change password</h3>
+          <p>Enter your new password</p>
+          <input type="password" id="adminNewPasswordInput" placeholder="New password" autocomplete="new-password" />
+          <input type="password" id="adminConfirmPasswordInput" placeholder="Confirm new password" autocomplete="new-password" />
+          <p class="admin-modal-error" id="adminChangeNewError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminChangeSave">Save password</button>
+            <button type="button" class="btn btn-outline" id="adminChangeNewBack">Back</button>
+            <button type="button" class="btn btn-outline" id="adminChangeNewCancel">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1570,18 +1567,20 @@ const BUY_BASE = 'https://mineraz.com/products/%D7%9E%D7%99%D7%99%D7%A7%D7%90%D7
 const ASSET = (name) => name;
 
 const SHADES = [
-  { id: 1,   name: '#1 Porcelain', descriptor: 'Very Fair',    undertone: 'Cool',         hex: '#FBE1D9', opacity: 1, match: 72, image: ASSET('shade-1.png'),   buy: `${BUY_BASE}1-new-collection` },
-  { id: 2,   name: '#2 Ivory',     descriptor: 'Light Neutral', undertone: 'Neutral',     hex: '#E9C6A8', opacity: 1, match: 88, image: ASSET('shade-2.png'),   buy: `${BUY_BASE}2-new-collection` },
-  { id: 2.5, name: '#2.5 Sand',    descriptor: 'In Between',   undertone: 'Neutral Warm', hex: '#DBBF9E', opacity: 1, match: 92, image: ASSET('shade-2.5.png'), buy: `${BUY_BASE}2-5-new-collection-%D7%92%D7%95%D7%95%D7%9F-%D7%97%D7%93%D7%A9` },
-  { id: 3,   name: '#3 Beige',     descriptor: 'Warm',         undertone: 'Warm Neutral', hex: '#E5B279', opacity: 1, match: 95, image: ASSET('shade-3.png'),   buy: `${BUY_BASE}3-new-collection` },
-  { id: 4,   name: '#4 Caramel',   descriptor: 'Medium Warm',  undertone: 'Warm',         hex: '#F2DBC8', opacity: 1, match: 88, image: ASSET('shade-4.png'),   buy: `${BUY_BASE}4-new-collection` },
-  { id: 5,   name: '#5 Toffee',    descriptor: 'Medium Deep',  undertone: 'Warm Olive',   hex: '#B57158', opacity: 1, match: 85, image: ASSET('shade-5.png'),   buy: `${BUY_BASE}5-new-collection` },
-  { id: 6,   name: '#6 Espresso',  descriptor: 'Deep',         undertone: 'Warm Deep',    hex: '#C2A787', opacity: 1, match: 78, image: ASSET('shade-6.png'),   buy: `${BUY_BASE}6-new-collection` },
+  { id: 1,   name: '#1 Porcelain', descriptor: 'Very Fair',    undertone: 'Cool',         hex: '#FBE1D9', opacity: 1, match: 72, image: '{{ "shade-1.png" | asset_url }}',   buy: `${BUY_BASE}1-new-collection` },
+  { id: 2,   name: '#2 Ivory',     descriptor: 'Light Neutral', undertone: 'Neutral',     hex: '#E9C6A8', opacity: 1, match: 88, image: '{{ "shade-2.png" | asset_url }}',   buy: `${BUY_BASE}2-new-collection` },
+  { id: 2.5, name: '#2.5 Sand',    descriptor: 'In Between',   undertone: 'Neutral Warm', hex: '#DBBF9E', opacity: 1, match: 92, image: '{{ "shade-2.5.png" | asset_url }}', buy: `${BUY_BASE}2-5-new-collection-%D7%92%D7%95%D7%95%D7%9F-%D7%97%D7%93%D7%A9` },
+  { id: 3,   name: '#3 Beige',     descriptor: 'Warm',         undertone: 'Warm Neutral', hex: '#E5B279', opacity: 1, match: 95, image: '{{ "shade-3.png" | asset_url }}',   buy: `${BUY_BASE}3-new-collection` },
+  { id: 4,   name: '#4 Caramel',   descriptor: 'Medium Warm',  undertone: 'Warm',         hex: '#F2DBC8', opacity: 1, match: 88, image: '{{ "shade-4.png" | asset_url }}',   buy: `${BUY_BASE}4-new-collection` },
+  { id: 5,   name: '#5 Toffee',    descriptor: 'Medium Deep',  undertone: 'Warm Olive',   hex: '#B57158', opacity: 1, match: 85, image: '{{ "shade-5.png" | asset_url }}',   buy: `${BUY_BASE}5-new-collection` },
+  { id: 6,   name: '#6 Espresso',  descriptor: 'Deep',         undertone: 'Warm Deep',    hex: '#C2A787', opacity: 1, match: 78, image: '{{ "shade-6.png" | asset_url }}',   buy: `${BUY_BASE}6-new-collection` },
 ];
 
 const ADMIN_PASSWORD_HASH = '9da696304b3165bb6b693478815834d32d9fdde622c7f18a0f6a57f45c746af9';
+const ADMIN_PASSWORD_STORAGE_KEY = 'mineraz-admin-password-hash';
 const SHADES_STORAGE_KEY = 'mineraz-shades-config';
 const ADMIN_SESSION_KEY = 'mineraz-admin-session';
+const MIN_PASSWORD_LENGTH = 6;
 
 const LEFT_CHEEK_SHADE_IDS = [1, 2, 2.5, 3];
 const RIGHT_CHEEK_SHADE_IDS = [4, 5, 6];
@@ -1661,6 +1660,14 @@ async function hashPassword(password) {
   return Array.from(new Uint8Array(hashBuffer))
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
+}
+
+function getAdminPasswordHash() {
+  return localStorage.getItem(ADMIN_PASSWORD_STORAGE_KEY) || ADMIN_PASSWORD_HASH;
+}
+
+function saveAdminPasswordHash(hash) {
+  localStorage.setItem(ADMIN_PASSWORD_STORAGE_KEY, hash);
 }
 
 function loadSavedShades() {
@@ -2001,6 +2008,8 @@ const dom = {
   shadeGrid: document.getElementById('shadeGrid'),
   selectorHint: document.getElementById('selectorHint'),
   appFooter: document.getElementById('appFooter'),
+  mobileScrollHint: document.getElementById('mobileScrollHint'),
+  mobileScrollRail: document.getElementById('mobileScrollRail'),
   brushSizeSlider: document.getElementById('brushSizeSlider'),
   brushSizeValue: document.getElementById('brushSizeValue'),
   brushSizeDown: document.getElementById('brushSizeDown'),
@@ -2012,11 +2021,28 @@ const dom = {
   adminBar: document.getElementById('adminBar'),
   adminLockNote: document.getElementById('adminLockNote'),
   adminSaveBtn: document.getElementById('adminSaveBtn'),
+  adminChangePwdBtn: document.getElementById('adminChangePwdBtn'),
+  adminCloseBtn: document.getElementById('adminCloseBtn'),
   adminPasswordBackdrop: document.getElementById('adminPasswordBackdrop'),
+  adminUnlockPanel: document.getElementById('adminUnlockPanel'),
+  adminChangeOldPanel: document.getElementById('adminChangeOldPanel'),
+  adminChangeNewPanel: document.getElementById('adminChangeNewPanel'),
   adminPasswordInput: document.getElementById('adminPasswordInput'),
   adminPasswordError: document.getElementById('adminPasswordError'),
   adminPasswordSubmit: document.getElementById('adminPasswordSubmit'),
   adminPasswordCancel: document.getElementById('adminPasswordCancel'),
+  adminPasswordChangeBtn: document.getElementById('adminPasswordChangeBtn'),
+  adminOldPasswordInput: document.getElementById('adminOldPasswordInput'),
+  adminChangeOldError: document.getElementById('adminChangeOldError'),
+  adminChangeOldNext: document.getElementById('adminChangeOldNext'),
+  adminChangeOldBack: document.getElementById('adminChangeOldBack'),
+  adminChangeOldCancel: document.getElementById('adminChangeOldCancel'),
+  adminNewPasswordInput: document.getElementById('adminNewPasswordInput'),
+  adminConfirmPasswordInput: document.getElementById('adminConfirmPasswordInput'),
+  adminChangeNewError: document.getElementById('adminChangeNewError'),
+  adminChangeSave: document.getElementById('adminChangeSave'),
+  adminChangeNewBack: document.getElementById('adminChangeNewBack'),
+  adminChangeNewCancel: document.getElementById('adminChangeNewCancel'),
   shadeEditorBackdrop: document.getElementById('shadeEditorBackdrop'),
   shadeEditorTitle: document.getElementById('shadeEditorTitle'),
   shadeEditorPreview: document.getElementById('shadeEditorPreview'),
@@ -2059,6 +2085,54 @@ let draggingSwatch = null;
 let detectStarted = false;
 let detectAttempts = 0;
 let animFrame = null;
+let pendingGesture = null;
+let mobileScrollDragY = null;
+
+const GESTURE_SCROLL_THRESHOLD = 14;
+const GESTURE_PAINT_THRESHOLD = 10;
+const GESTURE_TAP_THRESHOLD = 6;
+
+function isCoarsePointer(e) {
+  return e.pointerType === 'touch' || (window.matchMedia('(pointer: coarse)').matches && e.pointerType !== 'mouse');
+}
+
+function isScrollIntent(startX, startY, x, y) {
+  const dx = Math.abs(x - startX);
+  const dy = Math.abs(y - startY);
+  return dy > GESTURE_SCROLL_THRESHOLD && dy > dx * 1.1;
+}
+
+function syncGestureLock() {
+  dom.paintArea.classList.toggle('face-frame--gesture-lock', isPainting || Boolean(draggingSwatch));
+}
+
+function syncMobileScrollRail() {
+  if (!dom.mobileScrollRail) return;
+  dom.mobileScrollRail.hidden = !Boolean(state.imageSrc);
+}
+
+function clearPendingGesture(pointerId) {
+  if (pendingGesture?.pointerId === pointerId) pendingGesture = null;
+}
+
+function beginPainting(e, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  isPainting = true;
+  syncGestureLock();
+  if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
+  else applyPaintAt(coords.x, coords.y, true);
+}
+
+function beginSwatchDrag(e, hitId, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
+  draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
+  state.draggingSwatchId = hitId;
+  syncGestureLock();
+  renderView();
+}
 
 /* ---------- derived helpers ---------- */
 function getActiveShade() {
@@ -2085,9 +2159,7 @@ function parseShadeId(value) {
 }
 
 function canEditShade(shadeId) {
-  if (!state.adminAuthenticated) return false;
-  if (!state.shadesLocked) return true;
-  return state.activeShadeId === shadeId;
+  return state.adminAuthenticated;
 }
 
 function syncAdminBar() {
@@ -2097,8 +2169,8 @@ function syncAdminBar() {
   }
   dom.adminBar.hidden = false;
   dom.adminLockNote.textContent = state.shadesLocked
-    ? 'Saved — only the active paint shade can be edited'
-    : 'Unsaved changes — click Save to lock colors';
+    ? 'Colors saved — click any shade to edit'
+    : 'Unsaved changes — click Save colors when done';
 }
 
 function updateShadeEditorPreview(hex, opacityPercent) {
@@ -2108,13 +2180,14 @@ function updateShadeEditorPreview(hex, opacityPercent) {
 }
 
 function openShadeEditor(shadeId) {
-  if (!canEditShade(shadeId)) return;
+  if (!state.adminAuthenticated) return;
   const shade = getShadeById(shadeId);
+  if (!shade) return;
   const opacityPercent = getShadeOpacityPercent(shade);
   state.editingShadeId = shadeId;
   dom.shadeEditorTitle.textContent = `Edit shade ${shade.id}`;
   dom.shadeEditorHex.value = shade.hex;
-  dom.shadeEditorPicker.value = shade.hex;
+  dom.shadeEditorPicker.value = shade.hex.toLowerCase();
   dom.shadeEditorDarkness.value = String(opacityPercent);
   dom.shadeEditorError.hidden = true;
   updateShadeEditorPreview(shade.hex, opacityPercent);
@@ -2146,30 +2219,126 @@ function applyShadeEditor() {
 }
 
 async function promptAdminPassword() {
-  dom.adminPasswordInput.value = '';
-  dom.adminPasswordError.hidden = true;
+  clearPasswordModalFields();
+  showPasswordPanel('unlock');
   dom.adminPasswordBackdrop.hidden = false;
   dom.adminPasswordInput.focus();
+}
+
+function promptChangePassword() {
+  clearPasswordModalFields();
+  showPasswordPanel('change-old');
+  dom.adminPasswordBackdrop.hidden = false;
+  dom.adminOldPasswordInput.focus();
 }
 
 async function verifyAdminPassword() {
   const password = dom.adminPasswordInput.value;
   const hash = await hashPassword(password);
-  if (hash !== ADMIN_PASSWORD_HASH) {
+  if (hash !== getAdminPasswordHash()) {
     dom.adminPasswordError.hidden = false;
     dom.adminPasswordError.textContent = 'Incorrect password';
     return;
   }
   state.adminAuthenticated = true;
   sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-  dom.adminPasswordBackdrop.hidden = true;
+  hidePasswordModal();
   syncAdminBar();
   renderShadePanels();
+}
+
+async function verifyOldPasswordForChange() {
+  const password = dom.adminOldPasswordInput.value;
+  if (!password) {
+    dom.adminChangeOldError.hidden = false;
+    dom.adminChangeOldError.textContent = 'Enter your current password';
+    return;
+  }
+  const hash = await hashPassword(password);
+  if (hash !== getAdminPasswordHash()) {
+    dom.adminChangeOldError.hidden = false;
+    dom.adminChangeOldError.textContent = 'Current password is incorrect';
+    return;
+  }
+  dom.adminChangeOldError.hidden = true;
+  dom.adminNewPasswordInput.value = '';
+  dom.adminConfirmPasswordInput.value = '';
+  dom.adminChangeNewError.hidden = true;
+  showPasswordPanel('change-new');
+  dom.adminNewPasswordInput.focus();
+}
+
+async function saveNewAdminPassword() {
+  const newPassword = dom.adminNewPasswordInput.value;
+  const confirmPassword = dom.adminConfirmPasswordInput.value;
+  if (newPassword.length < MIN_PASSWORD_LENGTH) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = `New password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = 'New passwords do not match';
+    return;
+  }
+  const newHash = await hashPassword(newPassword);
+  if (newHash === getAdminPasswordHash()) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = 'New password must be different from the current password';
+    return;
+  }
+  saveAdminPasswordHash(newHash);
+  hidePasswordModal();
+  state.adminAuthenticated = true;
+  sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+  syncAdminBar();
+  renderShadePanels();
+  alert('Password changed successfully.');
+}
+
+function showPasswordPanel(panel) {
+  dom.adminUnlockPanel.hidden = panel !== 'unlock';
+  dom.adminChangeOldPanel.hidden = panel !== 'change-old';
+  dom.adminChangeNewPanel.hidden = panel !== 'change-new';
+}
+
+function hidePasswordModal() {
+  dom.adminPasswordBackdrop.hidden = true;
+  showPasswordPanel('unlock');
+}
+
+function clearPasswordModalFields() {
+  dom.adminPasswordInput.value = '';
+  dom.adminOldPasswordInput.value = '';
+  dom.adminNewPasswordInput.value = '';
+  dom.adminConfirmPasswordInput.value = '';
+  dom.adminPasswordError.hidden = true;
+  dom.adminChangeOldError.hidden = true;
+  dom.adminChangeNewError.hidden = true;
 }
 
 function saveAdminShades() {
   saveShadesToStorage();
   state.shadesLocked = true;
+  syncAdminBar();
+  renderShadePanels();
+  renderOverlay();
+  renderView();
+  const btn = dom.adminSaveBtn;
+  const prevLabel = btn.textContent;
+  btn.textContent = 'Saved!';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = prevLabel;
+    btn.disabled = false;
+  }, 1800);
+}
+
+function closeAdminMode() {
+  closeShadeEditor();
+  hidePasswordModal();
+  state.adminAuthenticated = false;
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
   syncAdminBar();
   renderShadePanels();
   renderOverlay();
@@ -2210,9 +2379,8 @@ function renderShadePanels() {
     btn.className = 'powder-swatch-btn';
     if (state.adminAuthenticated) {
       btn.classList.add('powder-swatch-btn--admin-editable');
-      if (state.shadesLocked && !canEditShade(shade.id)) btn.classList.add('powder-swatch-btn--locked');
     }
-    btn.dataset.shadeId = shade.id;
+    btn.dataset.shadeId = String(shade.id);
     btn.innerHTML = `
       <span class="powder-swatch-pan">
         <span class="powder-swatch-fill" style="background-color:${displayHex}"></span>
@@ -2221,7 +2389,7 @@ function renderShadePanels() {
       <span class="powder-hex">${displayHex.toLowerCase()}${opacityLabel}</span>
     `;
     btn.addEventListener('click', () => {
-      if (state.adminAuthenticated && canEditShade(shade.id)) {
+      if (state.adminAuthenticated) {
         openShadeEditor(shade.id);
         return;
       }
@@ -2282,12 +2450,10 @@ function syncShadeSelectionUI() {
   const hasImage = Boolean(state.imageSrc);
   dom.powderList.querySelectorAll('.powder-swatch-btn').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
-    btn.disabled = !hasImage && !(state.adminAuthenticated && canEditShade(id));
+    btn.disabled = state.adminAuthenticated ? false : !hasImage;
     const pan = btn.querySelector('.powder-swatch-pan');
     pan.classList.toggle('powder-swatch-pan--active', id === state.activeShadeId);
-    if (state.adminAuthenticated) {
-      btn.classList.toggle('powder-swatch-btn--locked', state.shadesLocked && !canEditShade(id));
-    }
+    btn.classList.remove('powder-swatch-btn--locked');
   });
   dom.shadeGrid.querySelectorAll('.shade-jar').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
@@ -2347,6 +2513,11 @@ function renderView() {
   dom.paintArea.classList.toggle('cursor-grabbing', Boolean(state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
+
+  if (dom.mobileScrollHint) {
+    dom.mobileScrollHint.hidden = !hasImage;
+  }
+  syncMobileScrollRail();
 
   syncShadeSelectionUI();
 }
@@ -2689,23 +2860,22 @@ function onPointerDown(e) {
   if (!coords) return;
 
   if (isToolActive()) {
-    e.preventDefault();
-    dom.paintArea.setPointerCapture?.(e.pointerId);
-    isPainting = true;
-    if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
-    else applyPaintAt(coords.x, coords.y, true);
+    if (isCoarsePointer(e)) {
+      pendingGesture = { pointerId: e.pointerId, type: 'paint', startX: coords.x, startY: coords.y };
+      return;
+    }
+    beginPainting(e, coords);
     return;
   }
 
   if (isSwatchMoveActive()) {
     const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
     if (hitId != null) {
-      e.preventDefault();
-      dom.paintArea.setPointerCapture?.(e.pointerId);
-      const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
-      draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
-      state.draggingSwatchId = hitId;
-      renderView();
+      if (isCoarsePointer(e)) {
+        pendingGesture = { pointerId: e.pointerId, type: 'swatch', hitId, startX: coords.x, startY: coords.y };
+        return;
+      }
+      beginSwatchDrag(e, hitId, coords);
     }
   }
 }
@@ -2713,6 +2883,21 @@ function onPointerDown(e) {
 function onPointerMove(e) {
   const coords = getLocalCoords(e);
   if (!coords) return;
+
+  if (pendingGesture && pendingGesture.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
+    if (isScrollIntent(pendingGesture.startX, pendingGesture.startY, coords.x, coords.y)) {
+      clearPendingGesture(e.pointerId);
+      return;
+    }
+    const dist = Math.hypot(coords.x - pendingGesture.startX, coords.y - pendingGesture.startY);
+    if (dist >= GESTURE_PAINT_THRESHOLD) {
+      const gesture = pendingGesture;
+      pendingGesture = null;
+      if (gesture.type === 'paint' && isToolActive()) beginPainting(e, coords);
+      else if (gesture.type === 'swatch') beginSwatchDrag(e, gesture.hitId, coords);
+    }
+    return;
+  }
 
   if (draggingSwatch) {
     e.preventDefault();
@@ -2741,6 +2926,16 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
+  const coords = getLocalCoords(e);
+  if (pendingGesture && pendingGesture.pointerId === e.pointerId) {
+    const gesture = pendingGesture;
+    clearPendingGesture(e.pointerId);
+    if (coords && gesture.type === 'paint' && isToolActive()) {
+      const dist = Math.hypot(coords.x - gesture.startX, coords.y - gesture.startY);
+      if (dist <= GESTURE_TAP_THRESHOLD) beginPainting(e, coords);
+    }
+  }
+
   const wasErasing = isPainting && state.eraseMode;
   isPainting = false;
   lastPoint = null;
@@ -2752,6 +2947,7 @@ function onPointerUp(e) {
   if (dom.paintArea.hasPointerCapture?.(e.pointerId)) {
     dom.paintArea.releasePointerCapture(e.pointerId);
   }
+  syncGestureLock();
   if (wasErasing) checkHasPaint();
 }
 
@@ -2763,6 +2959,7 @@ function onPointerEnter(e) {
 
 function onPointerLeave() {
   updateBrushCursor(null);
+  pendingGesture = null;
   if (!draggingSwatch) {
     if (state.hoveredSwatchId != null) {
       state.hoveredSwatchId = null;
@@ -2770,6 +2967,7 @@ function onPointerLeave() {
     }
     isPainting = false;
     lastPoint = null;
+    syncGestureLock();
   }
 }
 
@@ -2914,6 +3112,31 @@ function wireEvents() {
   dom.paintArea.addEventListener('pointerleave', onPointerLeave);
   dom.paintArea.addEventListener('pointercancel', onPointerUp);
 
+  if (dom.mobileScrollRail) {
+    dom.mobileScrollRail.addEventListener('pointerdown', (e) => {
+      mobileScrollDragY = e.clientY;
+      dom.mobileScrollRail.classList.add('is-dragging');
+      dom.mobileScrollRail.setPointerCapture?.(e.pointerId);
+      e.preventDefault();
+    });
+    dom.mobileScrollRail.addEventListener('pointermove', (e) => {
+      if (mobileScrollDragY == null) return;
+      const dy = e.clientY - mobileScrollDragY;
+      if (dy !== 0) window.scrollBy(0, -dy);
+      mobileScrollDragY = e.clientY;
+      e.preventDefault();
+    });
+    const endMobileScrollDrag = (e) => {
+      mobileScrollDragY = null;
+      dom.mobileScrollRail.classList.remove('is-dragging');
+      if (dom.mobileScrollRail.hasPointerCapture?.(e.pointerId)) {
+        dom.mobileScrollRail.releasePointerCapture(e.pointerId);
+      }
+    };
+    dom.mobileScrollRail.addEventListener('pointerup', endMobileScrollDrag);
+    dom.mobileScrollRail.addEventListener('pointercancel', endMobileScrollDrag);
+  }
+
   // image load → setup + auto detect
   dom.faceImage.addEventListener('load', () => {
     setupCanvases();
@@ -2948,14 +3171,43 @@ function wireEvents() {
   dom.ownerUnlockTarget.addEventListener('click', handleOwnerUnlockClick);
 
   dom.adminPasswordSubmit.addEventListener('click', verifyAdminPassword);
-  dom.adminPasswordCancel.addEventListener('click', () => {
-    dom.adminPasswordBackdrop.hidden = true;
+  dom.adminPasswordCancel.addEventListener('click', hidePasswordModal);
+  dom.adminPasswordChangeBtn.addEventListener('click', () => {
+    clearPasswordModalFields();
+    showPasswordPanel('change-old');
+    dom.adminOldPasswordInput.focus();
   });
   dom.adminPasswordInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') verifyAdminPassword();
   });
 
+  dom.adminChangeOldNext.addEventListener('click', verifyOldPasswordForChange);
+  dom.adminChangeOldBack.addEventListener('click', () => {
+    clearPasswordModalFields();
+    showPasswordPanel('unlock');
+    dom.adminPasswordInput.focus();
+  });
+  dom.adminChangeOldCancel.addEventListener('click', hidePasswordModal);
+  dom.adminOldPasswordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyOldPasswordForChange();
+  });
+
+  dom.adminChangeSave.addEventListener('click', saveNewAdminPassword);
+  dom.adminChangeNewBack.addEventListener('click', () => {
+    dom.adminNewPasswordInput.value = '';
+    dom.adminConfirmPasswordInput.value = '';
+    dom.adminChangeNewError.hidden = true;
+    showPasswordPanel('change-old');
+    dom.adminOldPasswordInput.focus();
+  });
+  dom.adminChangeNewCancel.addEventListener('click', hidePasswordModal);
+  dom.adminConfirmPasswordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') saveNewAdminPassword();
+  });
+
   dom.adminSaveBtn.addEventListener('click', saveAdminShades);
+  dom.adminChangePwdBtn.addEventListener('click', promptChangePassword);
+  dom.adminCloseBtn.addEventListener('click', closeAdminMode);
 
   dom.shadeEditorApply.addEventListener('click', applyShadeEditor);
   dom.shadeEditorCancel.addEventListener('click', closeShadeEditor);
@@ -2963,14 +3215,15 @@ function wireEvents() {
   dom.shadeEditorHex.addEventListener('input', () => {
     const norm = normalizeHex(dom.shadeEditorHex.value);
     if (norm) {
-      dom.shadeEditorPicker.value = norm;
+      dom.shadeEditorPicker.value = norm.toLowerCase();
       updateShadeEditorPreview(norm, Number(dom.shadeEditorDarkness.value));
     }
   });
 
   dom.shadeEditorPicker.addEventListener('input', () => {
-    dom.shadeEditorHex.value = dom.shadeEditorPicker.value.toUpperCase();
-    updateShadeEditorPreview(dom.shadeEditorPicker.value, Number(dom.shadeEditorDarkness.value));
+    const picked = dom.shadeEditorPicker.value.toUpperCase();
+    dom.shadeEditorHex.value = picked;
+    updateShadeEditorPreview(picked, Number(dom.shadeEditorDarkness.value));
   });
 
   dom.shadeEditorDarkness.addEventListener('input', () => {
@@ -2982,6 +3235,7 @@ function wireEvents() {
 /* ---------- Init ---------- */
 initAdminMode();
 syncBrushSizeUI();
+syncMobileScrollRail();
 renderShadePanels();
 wireEvents();
 renderView();
