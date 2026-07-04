@@ -276,20 +276,90 @@ body {
   box-shadow: 0 14px 36px rgba(45, 31, 22, 0.14), 0 2px 10px rgba(45, 31, 22, 0.08);
 }
 
-.face-frame.face-frame--gesture-lock {
-  touch-action: none;
+@media (min-width: 769px) {
+  .face-frame.face-frame--touch-lock {
+    touch-action: none;
+  }
+}
+
+.face-frame.face-frame--edit-active {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.35), 0 14px 36px rgba(45, 31, 22, 0.14);
 }
 
 @media (max-width: 768px) {
   .face-frame {
-    max-height: 58vh;
+    max-height: min(52vh, 22rem);
   }
 
   .face-frame #faceImage {
-    max-height: 58vh;
+    max-height: min(52vh, 22rem);
     width: 100%;
     object-fit: contain;
     background: #efe5d8;
+  }
+}
+
+.mobile-scroll-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  touch-action: pan-y;
+  background: transparent;
+  cursor: default;
+}
+
+.mobile-mode-bar {
+  display: none;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+}
+
+.mobile-mode-toggle {
+  display: flex;
+  padding: 0.28rem;
+  gap: 0.28rem;
+  border-radius: 999px;
+  background: rgba(255, 252, 248, 0.96);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  box-shadow: 0 4px 14px rgba(45, 31, 22, 0.08);
+}
+
+.mobile-mode-btn {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 0.75rem;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(44, 26, 14, 0.72);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.mobile-mode-btn.active {
+  background: var(--text-primary);
+  color: var(--card-bg);
+}
+
+.mobile-mode-caption {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.35;
+  text-align: center;
+  color: rgba(44, 26, 14, 0.48);
+}
+
+@media (max-width: 768px) {
+  .mobile-mode-bar {
+    display: flex;
   }
 }
 
@@ -370,80 +440,6 @@ body {
   text-align: center;
   max-width: 20rem;
   margin: 0;
-}
-
-.mobile-scroll-hint {
-  display: none;
-  font-size: 0.68rem;
-  color: rgba(44, 26, 14, 0.45);
-  text-align: center;
-  margin: 0;
-  max-width: 20rem;
-  line-height: 1.35;
-}
-
-.mobile-scroll-rail {
-  display: none;
-  position: fixed;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 45;
-  width: 2rem;
-  padding: 0.85rem 0.35rem;
-  border-radius: 10px 0 0 10px;
-  background: rgba(255, 252, 248, 0.94);
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-right: none;
-  box-shadow: -4px 0 14px rgba(45, 31, 22, 0.1);
-  touch-action: pan-y;
-  user-select: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  cursor: grab;
-}
-
-.mobile-scroll-rail.is-dragging {
-  cursor: grabbing;
-  background: rgba(255, 252, 248, 1);
-}
-
-.mobile-scroll-rail-grip {
-  width: 0.28rem;
-  height: 2.2rem;
-  border-radius: 999px;
-  background: rgba(201, 169, 110, 0.65);
-}
-
-.mobile-scroll-rail-label {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 0.58rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: rgba(44, 26, 14, 0.5);
-  font-weight: 600;
-}
-
-@media (max-width: 768px), (pointer: coarse) {
-  .mobile-scroll-hint {
-    display: block;
-  }
-
-  .mobile-scroll-rail {
-    display: flex;
-  }
-}
-
-@media (min-width: 769px) and (pointer: fine) {
-  .mobile-scroll-hint {
-    display: none !important;
-  }
-
-  .mobile-scroll-rail {
-    display: none !important;
-  }
 }
 
 /* ---------- Loading / error ---------- */
@@ -1401,7 +1397,13 @@ body {
 
               <!-- Photo + canvases (shown when image loaded) -->
               <div class="photo-stage" id="photoStage" hidden>
-                <p class="status-text mobile-scroll-hint" id="mobileScrollHint">Swipe up/down on photo to scroll · use the scroll tab on the right · drag sideways to paint</p>
+                <div class="mobile-mode-bar" id="mobileModeBar" hidden>
+                  <div class="mobile-mode-toggle" role="tablist" aria-label="Photo interaction mode">
+                    <button type="button" class="mobile-mode-btn active" id="mobileScrollModeBtn" role="tab" aria-selected="true">Scroll</button>
+                    <button type="button" class="mobile-mode-btn" id="mobileEditModeBtn" role="tab" aria-selected="false">Edit photo</button>
+                  </div>
+                  <p class="mobile-mode-caption" id="mobileModeCaption">Scroll freely to pick shades below · switch to Edit photo to paint or move swatches</p>
+                </div>
                 <div class="face-frame" id="paintArea">
                   <img id="faceImage" alt="Face for skin analysis" draggable="false" />
                   <canvas id="paintCanvas" class="layer makeup-paint-layer"></canvas>
@@ -1409,6 +1411,7 @@ body {
                   <img id="brushCursor" class="brush-cursor" src="{{ 'brush.png' | asset_url }}" alt="" draggable="false" hidden />
                   <!-- <img id="brushCursor" class="brush-cursor" src="assets/brush.png" alt="" draggable="false" hidden /> -->
                   <div id="eraseCursor" class="erase-cursor" hidden></div>
+                  <div class="mobile-scroll-shield" id="mobileScrollShield" hidden aria-hidden="true"></div>
                 </div>
 
                 <div class="photo-controls">
@@ -1472,11 +1475,6 @@ body {
         <!-- Footer -->
         <footer class="app-footer" id="appFooter"></footer>
       </div>
-    </div>
-
-    <div class="mobile-scroll-rail" id="mobileScrollRail" aria-label="Scroll page" title="Drag to scroll">
-      <span class="mobile-scroll-rail-grip" aria-hidden="true"></span>
-      <span class="mobile-scroll-rail-label">Scroll</span>
     </div>
 
     <!-- Admin password modal -->
@@ -2008,8 +2006,11 @@ const dom = {
   shadeGrid: document.getElementById('shadeGrid'),
   selectorHint: document.getElementById('selectorHint'),
   appFooter: document.getElementById('appFooter'),
-  mobileScrollHint: document.getElementById('mobileScrollHint'),
-  mobileScrollRail: document.getElementById('mobileScrollRail'),
+  mobileModeBar: document.getElementById('mobileModeBar'),
+  mobileScrollModeBtn: document.getElementById('mobileScrollModeBtn'),
+  mobileEditModeBtn: document.getElementById('mobileEditModeBtn'),
+  mobileModeCaption: document.getElementById('mobileModeCaption'),
+  mobileScrollShield: document.getElementById('mobileScrollShield'),
   brushSizeSlider: document.getElementById('brushSizeSlider'),
   brushSizeValue: document.getElementById('brushSizeValue'),
   brushSizeDown: document.getElementById('brushSizeDown'),
@@ -2071,6 +2072,7 @@ const state = {
   adminAuthenticated: false,
   shadesLocked: Boolean(localStorage.getItem(SHADES_STORAGE_KEY)),
   editingShadeId: null,
+  mobileEditMode: false,
 };
 
 // canvas working refs
@@ -2085,53 +2087,65 @@ let draggingSwatch = null;
 let detectStarted = false;
 let detectAttempts = 0;
 let animFrame = null;
-let pendingGesture = null;
-let mobileScrollDragY = null;
 
-const GESTURE_SCROLL_THRESHOLD = 14;
-const GESTURE_PAINT_THRESHOLD = 10;
-const GESTURE_TAP_THRESHOLD = 6;
-
-function isCoarsePointer(e) {
-  return e.pointerType === 'touch' || (window.matchMedia('(pointer: coarse)').matches && e.pointerType !== 'mouse');
+function isMobileLayout() {
+  return window.matchMedia('(max-width: 768px)').matches;
 }
 
-function isScrollIntent(startX, startY, x, y) {
-  const dx = Math.abs(x - startX);
-  const dy = Math.abs(y - startY);
-  return dy > GESTURE_SCROLL_THRESHOLD && dy > dx * 1.1;
+function canTouchPhotoOnMobile() {
+  return !isMobileLayout() || state.mobileEditMode;
 }
 
-function syncGestureLock() {
-  dom.paintArea.classList.toggle('face-frame--gesture-lock', isPainting || Boolean(draggingSwatch));
-}
-
-function syncMobileScrollRail() {
-  if (!dom.mobileScrollRail) return;
-  dom.mobileScrollRail.hidden = !Boolean(state.imageSrc);
-}
-
-function clearPendingGesture(pointerId) {
-  if (pendingGesture?.pointerId === pointerId) pendingGesture = null;
-}
-
-function beginPainting(e, coords) {
-  e.preventDefault();
-  dom.paintArea.setPointerCapture?.(e.pointerId);
-  isPainting = true;
-  syncGestureLock();
-  if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
-  else applyPaintAt(coords.x, coords.y, true);
-}
-
-function beginSwatchDrag(e, hitId, coords) {
-  e.preventDefault();
-  dom.paintArea.setPointerCapture?.(e.pointerId);
-  const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
-  draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
-  state.draggingSwatchId = hitId;
-  syncGestureLock();
+function setMobileEditMode(enabled) {
+  state.mobileEditMode = Boolean(enabled);
+  isPainting = false;
+  lastPoint = null;
+  draggingSwatch = null;
+  if (state.draggingSwatchId != null) {
+    state.draggingSwatchId = null;
+  }
+  updateBrushCursor(null);
+  syncMobilePhotoUI();
   renderView();
+}
+
+function syncMobilePhotoUI() {
+  const mobile = isMobileLayout();
+  const hasImage = Boolean(state.imageSrc);
+
+  if (dom.mobileModeBar) dom.mobileModeBar.hidden = !(mobile && hasImage);
+  if (dom.mobileScrollShield) dom.mobileScrollShield.hidden = !(mobile && hasImage && !state.mobileEditMode);
+
+  if (dom.mobileScrollModeBtn) {
+    dom.mobileScrollModeBtn.classList.toggle('active', !state.mobileEditMode);
+    dom.mobileScrollModeBtn.setAttribute('aria-selected', String(!state.mobileEditMode));
+  }
+  if (dom.mobileEditModeBtn) {
+    dom.mobileEditModeBtn.classList.toggle('active', state.mobileEditMode);
+    dom.mobileEditModeBtn.setAttribute('aria-selected', String(state.mobileEditMode));
+  }
+
+  dom.paintArea.classList.toggle('face-frame--edit-active', mobile && hasImage && state.mobileEditMode);
+
+  if (dom.mobileModeCaption && mobile && hasImage) {
+    if (!state.mobileEditMode) {
+      dom.mobileModeCaption.textContent = 'Scroll freely to pick shades below · switch to Edit photo to paint or move swatches';
+    } else if (isBrushActive()) {
+      const s = getActiveShade();
+      dom.mobileModeCaption.textContent = `Edit mode — drag on skin to paint ${s.name}`;
+    } else if (isEraseActive()) {
+      dom.mobileModeCaption.textContent = 'Edit mode — drag on skin to erase makeup';
+    } else if (isSwatchMoveActive()) {
+      dom.mobileModeCaption.textContent = 'Edit mode — drag cheek swatches to reposition';
+    } else {
+      dom.mobileModeCaption.textContent = 'Edit mode — select a shade or tap Erase, then drag on the photo';
+    }
+  }
+}
+
+function syncTouchLock() {
+  const lockTouch = !isMobileLayout() && (isToolActive() || Boolean(draggingSwatch));
+  dom.paintArea.classList.toggle('face-frame--touch-lock', lockTouch);
 }
 
 /* ---------- derived helpers ---------- */
@@ -2512,12 +2526,10 @@ function renderView() {
   // cursor state on frame
   dom.paintArea.classList.toggle('cursor-grabbing', Boolean(state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
-  dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
+  dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId() && canTouchPhotoOnMobile());
 
-  if (dom.mobileScrollHint) {
-    dom.mobileScrollHint.hidden = !hasImage;
-  }
-  syncMobileScrollRail();
+  syncMobilePhotoUI();
+  syncTouchLock();
 
   syncShadeSelectionUI();
 }
@@ -2555,6 +2567,7 @@ function handleImageSelect(file) {
   state.hasPaint = false;
   detectStarted = false;
   detectAttempts = 0;
+  state.mobileEditMode = false;
 
   const url = URL.createObjectURL(file);
   state.imageSrc = url;
@@ -2569,6 +2582,7 @@ function clearImage() {
   state.analyzed = false;
   state.cheekRegions = null;
   state.error = null;
+  state.mobileEditMode = false;
   paintLayer = null;
   paintedShadeHex = null;
   state.hasPaint = false;
@@ -2856,48 +2870,40 @@ function updateBrushCursor(coords) {
 }
 
 function onPointerDown(e) {
+  if (!canTouchPhotoOnMobile()) return;
+
   const coords = getLocalCoords(e);
   if (!coords) return;
 
   if (isToolActive()) {
-    if (isCoarsePointer(e)) {
-      pendingGesture = { pointerId: e.pointerId, type: 'paint', startX: coords.x, startY: coords.y };
-      return;
-    }
-    beginPainting(e, coords);
+    e.preventDefault();
+    dom.paintArea.setPointerCapture?.(e.pointerId);
+    isPainting = true;
+    syncTouchLock();
+    if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
+    else applyPaintAt(coords.x, coords.y, true);
     return;
   }
 
   if (isSwatchMoveActive()) {
     const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
     if (hitId != null) {
-      if (isCoarsePointer(e)) {
-        pendingGesture = { pointerId: e.pointerId, type: 'swatch', hitId, startX: coords.x, startY: coords.y };
-        return;
-      }
-      beginSwatchDrag(e, hitId, coords);
+      e.preventDefault();
+      dom.paintArea.setPointerCapture?.(e.pointerId);
+      const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
+      draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
+      state.draggingSwatchId = hitId;
+      syncTouchLock();
+      renderView();
     }
   }
 }
 
 function onPointerMove(e) {
+  if (!canTouchPhotoOnMobile()) return;
+
   const coords = getLocalCoords(e);
   if (!coords) return;
-
-  if (pendingGesture && pendingGesture.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
-    if (isScrollIntent(pendingGesture.startX, pendingGesture.startY, coords.x, coords.y)) {
-      clearPendingGesture(e.pointerId);
-      return;
-    }
-    const dist = Math.hypot(coords.x - pendingGesture.startX, coords.y - pendingGesture.startY);
-    if (dist >= GESTURE_PAINT_THRESHOLD) {
-      const gesture = pendingGesture;
-      pendingGesture = null;
-      if (gesture.type === 'paint' && isToolActive()) beginPainting(e, coords);
-      else if (gesture.type === 'swatch') beginSwatchDrag(e, gesture.hitId, coords);
-    }
-    return;
-  }
 
   if (draggingSwatch) {
     e.preventDefault();
@@ -2926,16 +2932,6 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
-  const coords = getLocalCoords(e);
-  if (pendingGesture && pendingGesture.pointerId === e.pointerId) {
-    const gesture = pendingGesture;
-    clearPendingGesture(e.pointerId);
-    if (coords && gesture.type === 'paint' && isToolActive()) {
-      const dist = Math.hypot(coords.x - gesture.startX, coords.y - gesture.startY);
-      if (dist <= GESTURE_TAP_THRESHOLD) beginPainting(e, coords);
-    }
-  }
-
   const wasErasing = isPainting && state.eraseMode;
   isPainting = false;
   lastPoint = null;
@@ -2947,19 +2943,18 @@ function onPointerUp(e) {
   if (dom.paintArea.hasPointerCapture?.(e.pointerId)) {
     dom.paintArea.releasePointerCapture(e.pointerId);
   }
-  syncGestureLock();
+  syncTouchLock();
   if (wasErasing) checkHasPaint();
 }
 
 function onPointerEnter(e) {
-  if (!isToolActive()) return;
+  if (!canTouchPhotoOnMobile() || !isToolActive()) return;
   const coords = getLocalCoords(e);
   if (coords) updateBrushCursor(coords);
 }
 
 function onPointerLeave() {
   updateBrushCursor(null);
-  pendingGesture = null;
   if (!draggingSwatch) {
     if (state.hoveredSwatchId != null) {
       state.hoveredSwatchId = null;
@@ -2967,7 +2962,7 @@ function onPointerLeave() {
     }
     isPainting = false;
     lastPoint = null;
-    syncGestureLock();
+    syncTouchLock();
   }
 }
 
@@ -3091,8 +3086,12 @@ function wireEvents() {
 
   dom.eraseBtn.addEventListener('click', () => {
     state.eraseMode = !state.eraseMode;
+    if (isMobileLayout() && state.eraseMode) setMobileEditMode(true);
     renderView();
   });
+
+  dom.mobileScrollModeBtn?.addEventListener('click', () => setMobileEditMode(false));
+  dom.mobileEditModeBtn?.addEventListener('click', () => setMobileEditMode(true));
 
   dom.resetSwatchBtn.addEventListener('click', () => {
     state.swatchOffsets = {};
@@ -3111,31 +3110,6 @@ function wireEvents() {
   dom.paintArea.addEventListener('pointerenter', onPointerEnter);
   dom.paintArea.addEventListener('pointerleave', onPointerLeave);
   dom.paintArea.addEventListener('pointercancel', onPointerUp);
-
-  if (dom.mobileScrollRail) {
-    dom.mobileScrollRail.addEventListener('pointerdown', (e) => {
-      mobileScrollDragY = e.clientY;
-      dom.mobileScrollRail.classList.add('is-dragging');
-      dom.mobileScrollRail.setPointerCapture?.(e.pointerId);
-      e.preventDefault();
-    });
-    dom.mobileScrollRail.addEventListener('pointermove', (e) => {
-      if (mobileScrollDragY == null) return;
-      const dy = e.clientY - mobileScrollDragY;
-      if (dy !== 0) window.scrollBy(0, -dy);
-      mobileScrollDragY = e.clientY;
-      e.preventDefault();
-    });
-    const endMobileScrollDrag = (e) => {
-      mobileScrollDragY = null;
-      dom.mobileScrollRail.classList.remove('is-dragging');
-      if (dom.mobileScrollRail.hasPointerCapture?.(e.pointerId)) {
-        dom.mobileScrollRail.releasePointerCapture(e.pointerId);
-      }
-    };
-    dom.mobileScrollRail.addEventListener('pointerup', endMobileScrollDrag);
-    dom.mobileScrollRail.addEventListener('pointercancel', endMobileScrollDrag);
-  }
 
   // image load → setup + auto detect
   dom.faceImage.addEventListener('load', () => {
@@ -3230,12 +3204,16 @@ function wireEvents() {
     const hex = normalizeHex(dom.shadeEditorHex.value) ?? dom.shadeEditorPicker.value;
     updateShadeEditorPreview(hex, Number(dom.shadeEditorDarkness.value));
   });
+
+  window.addEventListener('resize', () => {
+    syncMobilePhotoUI();
+    syncTouchLock();
+  });
 }
 
 /* ---------- Init ---------- */
 initAdminMode();
 syncBrushSizeUI();
-syncMobileScrollRail();
 renderShadePanels();
 wireEvents();
 renderView();
