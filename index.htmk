@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mineraz Skin Shade Analyzer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+:root {
+  --bg-cream: #c8a992;
+  --card-bg: #fffdf9;
+  --text-primary: #2c1a0e;
+  --accent-gold: #c9a96e;
+  --accent-gold-soft: #d7b58a;
+  --border-soft: rgba(120, 84, 52, 0.14);
+  --shadow-soft: 0 16px 40px rgba(45, 31, 22, 0.11);
+  --radius-card: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 80% -10%, rgba(190, 150, 100, 0.1) 0%, transparent 35%),
+    radial-gradient(circle at -10% 70%, rgba(190, 150, 100, 0.08) 0%, transparent 28%),
+    var(--bg-cream);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Layout ---------- */
+.app-shell {
+  position: relative;
+}
+
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  border-radius: 18px;
+}
+
+@media (min-width: 768px) {
+  .app-container {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+.app-main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .app-main-grid {
+    grid-template-columns: 1.5fr 1fr;
+  }
+}
+
+/* ---------- Face canvas area ---------- */
+.face-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.upload-dropzone {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+  border: 2px dashed rgba(201, 169, 110, 0.4);
+  padding: 2.5rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.95) 0%, rgba(255, 252, 248, 0.85) 100%);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(2px);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-dropzone.drag-over {
+  border-color: var(--accent-gold);
+  background: rgba(201, 169, 110, 0.05);
+}
+
+.upload-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.125rem;
+  margin: 0 0 0.25rem;
+  color: var(--text-primary);
+}
+
+.upload-hint {
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.5);
+  margin: 0 0 1.25rem;
+}
+
+.upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.upload-error {
+  font-size: 0.75rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin-top: 1rem;
+}
+
+.upload-dragnote {
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.4);
+  margin: 1rem 0 0;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  font-family: inherit;
+}
+
+.btn-primary {
+  padding: 0.625rem 1.5rem;
+  background: var(--text-primary);
+  color: var(--card-bg);
+  box-shadow: 0 8px 16px rgba(45, 31, 22, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+}
+
+.btn-primary:hover {
+  background: rgba(44, 26, 14, 0.9);
+}
+
+.btn-outline {
+  padding: 0.625rem 1.5rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(44, 26, 14, 0.25);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent-gold);
+}
+
+.btn-chip {
+  padding: 0.375rem 1rem;
+  font-size: 0.75rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(44, 26, 14, 0.25);
+}
+
+.btn-chip:hover {
+  border-color: var(--accent-gold);
+}
+
+.btn-chip.active {
+  background: var(--text-primary);
+  color: var(--card-bg);
+  border-color: var(--text-primary);
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.6);
+  text-decoration: underline;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.link-btn:hover {
+  color: var(--text-primary);
+}
+
+/* ---------- Camera ---------- */
+.camera-panel {
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+  border: 2px solid rgba(201, 169, 110, 0.25);
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-soft);
+}
+
+.camera-preview {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: rgba(44, 26, 14, 0.1);
+  transform: scaleX(-1);
+  display: block;
+}
+
+.camera-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+/* ---------- Photo stage ---------- */
+.photo-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.face-frame {
+  position: relative;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 2px solid rgba(201, 169, 110, 0.25);
+  isolation: isolate;
+  background: #efe5d8;
+  touch-action: pan-y pinch-zoom;
+  box-shadow: 0 14px 36px rgba(45, 31, 22, 0.14), 0 2px 10px rgba(45, 31, 22, 0.08);
+}
+
+@media (min-width: 769px) {
+  .face-frame.face-frame--touch-lock {
+    touch-action: none;
+  }
+}
+
+.face-frame.cursor-none {
+  cursor: none;
+}
+
+.face-frame.cursor-grab {
+  cursor: grab;
+}
+
+.face-frame.cursor-grabbing {
+  cursor: grabbing;
+}
+
+#faceImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.makeup-paint-layer {
+  /* Sheer, buildable foundation that lets skin texture show through */
+  mix-blend-mode: normal;
+  opacity: 0.85;
+  filter: blur(0.6px);
+}
+
+.brush-cursor {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  width: 62px;
+  height: auto;
+  transform-origin: 50% 6%;
+  transform: rotate(-22deg);
+  filter: drop-shadow(0 6px 9px rgba(44, 26, 14, 0.4));
+  will-change: left, top, width;
+  transition: width 0.12s ease-out;
+}
+
+.erase-cursor {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  border: 2px solid rgba(44, 26, 14, 0.5);
+  background: rgba(255, 253, 249, 0.3);
+}
+
+.photo-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.status-text {
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.5);
+  text-align: center;
+  max-width: 20rem;
+  margin: 0;
+}
+
+.mobile-scroll-knob {
+  display: none;
+  position: fixed;
+  left: 10px;
+  z-index: 60;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(40, 40, 40, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.24);
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.mobile-scroll-knob.is-dragging {
+  cursor: grabbing;
+  background: rgba(58, 58, 58, 0.96);
+}
+
+@media (max-width: 768px) {
+  .mobile-scroll-knob:not([hidden]) {
+    display: block;
+  }
+}
+
+/* ---------- Loading / error ---------- */
+.loading-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(44, 26, 14, 0.8);
+}
+
+.spinner {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--accent-gold);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-card);
+  max-width: 28rem;
+  text-align: center;
+}
+
+.reanalyze-btn {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.reanalyze-btn.as-link {
+  background: none;
+  border: none;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.6);
+  text-decoration: underline;
+}
+
+.reanalyze-btn.as-link:hover {
+  color: var(--text-primary);
+}
+
+.reanalyze-btn.as-primary {
+  padding: 0.75rem 2.5rem;
+  background: var(--text-primary);
+  color: var(--card-bg);
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 9999px;
+  box-shadow: 0 8px 16px rgba(45, 31, 22, 0.15);
+}
+
+.reanalyze-btn.as-primary:hover {
+  background: rgba(44, 26, 14, 0.9);
+}
+
+/* ---------- Right panel ---------- */
+.right-panel-card {
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.98) 0%, rgba(255, 250, 244, 0.95) 100%);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  padding: 1.25rem;
+  box-shadow: 0 10px 26px rgba(45, 31, 22, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.panel-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.7);
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+
+.powder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.powder-swatch-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 0.5rem;
+  padding: 0.125rem 0.25rem;
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.powder-swatch-btn:hover:not(:disabled) {
+  border-color: rgba(190, 150, 100, 0.28);
+  background: rgba(44, 26, 14, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.powder-swatch-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.powder-swatch-pan {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 3px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, #d4c4b0 0%, #b8a898 100%);
+  box-shadow: 0 1px 3px rgba(44, 26, 14, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  transition: box-shadow 0.2s;
+}
+
+.powder-swatch-pan--active {
+  box-shadow: 0 0 0 2px var(--accent-gold), 0 0 0 4px var(--card-bg), 0 1px 4px rgba(44, 26, 14, 0.18);
+}
+
+.powder-swatch-fill {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Soft pressed-powder dome sheen — kept subtle so the shade color stays vivid */
+.powder-swatch-fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image:
+    radial-gradient(circle at 32% 26%, rgba(255, 255, 255, 0.35) 0%, transparent 45%),
+    radial-gradient(circle at 72% 80%, rgba(0, 0, 0, 0.16) 0%, transparent 46%);
+  pointer-events: none;
+}
+
+/* Faint grainy mineral texture (very low opacity so it never washes out the color) */
+.powder-swatch-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.14;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: 120px 120px;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.powder-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(44, 26, 14, 0.8);
+  width: 2rem;
+  text-align: left;
+}
+
+.powder-hex {
+  font-family: 'Inter', system-ui, monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(44, 26, 14, 0.55);
+  text-transform: lowercase;
+  margin-left: auto;
+}
+
+/* ---------- Shade selector ---------- */
+.shade-selector-section {
+  width: 100%;
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+}
+
+.divider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.divider-ornament {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(190, 150, 100, 0.45), transparent);
+}
+
+.selector-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.125rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  font-weight: 600;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.selector-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.5);
+  margin: 0 0 1rem;
+}
+
+.owner-unlock-zone {
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.shade-selector-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  row-gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .shade-selector-grid {
+    gap: 1rem;
+  }
+}
+
+.shade-jar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.buy-now-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.42rem 1.15rem;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--card-bg);
+  background: var(--text-primary);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  box-shadow: 0 6px 14px rgba(45, 31, 22, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: background 0.2s, color 0.2s, transform 0.15s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.buy-now-btn:hover {
+  background: var(--accent-gold);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(45, 31, 22, 0.22);
+}
+
+.shade-jar {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-card);
+  border: 2px solid transparent;
+  background: linear-gradient(180deg, rgba(255, 252, 248, 0.6) 0%, rgba(255, 252, 248, 0.15) 100%);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.shade-jar:hover:not(:disabled) {
+  transform: scale(1.05);
+  border-color: rgba(201, 169, 110, 0.3);
+  box-shadow: 0 12px 26px rgba(45, 31, 22, 0.12), 0 0 0 1px rgba(190, 150, 100, 0.26);
+}
+
+.shade-jar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.shade-jar.active {
+  background: var(--card-bg);
+  border: 2px solid var(--accent-gold);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px 2px rgba(201, 169, 110, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 16px 4px rgba(201, 169, 110, 0.7);
+  }
+}
+
+.jar-img-wrap {
+  position: relative;
+}
+
+.jar-img {
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(44, 26, 14, 0.15);
+  outline: 1px solid rgba(44, 26, 14, 0.1);
+  background: var(--card-bg);
+  object-fit: cover;
+  transform: scale(1.1);
+  display: block;
+}
+
+.jar-badge {
+  position: absolute;
+  bottom: -0.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--card-bg);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 9999px;
+}
+
+.jar-info {
+  text-align: center;
+  min-width: 90px;
+}
+
+.jar-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.jar-desc,
+.jar-undertone {
+  font-size: 10px;
+  color: rgba(44, 26, 14, 0.6);
+  margin: 0;
+}
+
+.jar-match {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin: 0.125rem 0 0;
+}
+
+/* ---------- Footer ---------- */
+.app-footer {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(201, 169, 110, 0.2);
+}
+
+.footer-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+}
+
+.footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.6);
+  font-weight: 500;
+}
+
+.footer-badge .icon {
+  font-size: 0.875rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .right-panel {
+    order: -1;
+  }
+
+  .shade-selector-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .powder-swatch-pan {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
+/* ---------- Paint controls (brush / spread) ---------- */
+.paint-controls-bar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(255, 252, 248, 0.72);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+@media (max-width: 920px) {
+  .paint-controls-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.paint-control-group {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.paint-control-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.55);
+  font-weight: 500;
+  text-align: center;
+}
+
+.paint-control-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.paint-control-slider-stack {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.paint-control-slider-ends {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0.1rem;
+}
+
+.paint-control-end {
+  font-size: 0.68rem;
+  color: rgba(44, 26, 14, 0.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.paint-control-end--center {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(44, 26, 14, 0.7);
+  min-width: 2.4rem;
+  text-align: center;
+}
+
+.paint-range {
+  width: 100%;
+  min-width: 0;
+  height: 0.35rem;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 999px;
+  background: linear-gradient(to right, rgba(190, 150, 100, 0.25), rgba(201, 169, 110, 0.65));
+  outline: none;
+  cursor: pointer;
+}
+
+.paint-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(44, 26, 14, 0.22);
+}
+
+.paint-range::-moz-range-thumb {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(44, 26, 14, 0.22);
+}
+
+.brush-size-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border-radius: 50%;
+  border: 1px solid rgba(190, 150, 100, 0.45);
+  background: rgba(255, 252, 248, 0.95);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  font-family: inherit;
+  padding: 0;
+}
+
+.brush-size-btn:hover {
+  background: rgba(201, 169, 110, 0.18);
+  border-color: var(--accent-gold);
+}
+
+.brush-size-btn:active {
+  transform: scale(0.94);
+}
+
+.brush-size-value {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(44, 26, 14, 0.7);
+  min-width: 1.6rem;
+  text-align: center;
+}
+
+.brush-size-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 252, 248, 0.92);
+  border: 1px solid rgba(190, 150, 100, 0.28);
+}
+
+.brush-size-inline-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.5);
+  margin-right: 0.15rem;
+}
+
+/* ---------- Admin mode ---------- */
+.admin-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  padding: 0.65rem 1rem;
+  background: rgba(44, 26, 14, 0.06);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: var(--radius-card);
+  font-size: 0.78rem;
+  color: rgba(44, 26, 14, 0.75);
+}
+
+.admin-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .admin-bar-actions {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.admin-bar[hidden] {
+  display: none !important;
+}
+
+.admin-save-btn {
+  padding: 0.4rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--accent-gold);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+}
+
+.admin-save-btn:hover {
+  background: #b8924f;
+}
+
+.admin-save-btn:disabled {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.admin-close-btn {
+  padding: 0.4rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 252, 248, 0.95);
+  color: rgba(44, 26, 14, 0.75);
+  border: 1px solid rgba(190, 150, 100, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.admin-close-btn:hover {
+  background: rgba(255, 252, 248, 1);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+}
+
+.admin-lock-note {
+  font-size: 0.72rem;
+  color: rgba(44, 26, 14, 0.55);
+}
+
+.powder-swatch-btn--admin-editable {
+  cursor: pointer;
+  position: relative;
+}
+
+.powder-swatch-btn--admin-editable::after {
+  content: '✎';
+  position: absolute;
+  top: 0.2rem;
+  right: 0.2rem;
+  font-size: 0.65rem;
+  color: var(--accent-gold);
+  opacity: 0.85;
+}
+
+.powder-swatch-btn--locked {
+  opacity: 0.72;
+}
+
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(44, 26, 14, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.admin-modal {
+  background: var(--card-bg);
+  border-radius: var(--radius-card);
+  box-shadow: 0 24px 60px rgba(44, 26, 14, 0.22);
+  padding: 1.75rem;
+  width: 100%;
+  max-width: 22rem;
+  text-align: center;
+}
+
+.admin-modal h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.35rem;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.admin-modal p {
+  font-size: 0.78rem;
+  color: rgba(44, 26, 14, 0.55);
+  margin: 0 0 1.1rem;
+}
+
+.admin-modal input[type="password"],
+.admin-modal input[type="text"] {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.admin-modal-error {
+  color: #b54a4a;
+  font-size: 0.75rem;
+  margin: -0.35rem 0 0.65rem;
+}
+
+.admin-modal-actions {
+  display: flex;
+  gap: 0.65rem;
+  justify-content: center;
+}
+
+.admin-modal-link-btn {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 0.75rem;
+  color: rgba(44, 26, 14, 0.55);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-modal-link-btn:hover {
+  color: var(--accent-gold);
+}
+
+.admin-change-pwd-btn {
+  padding: 0.4rem 1.1rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(255, 252, 248, 0.95);
+  color: rgba(44, 26, 14, 0.75);
+  border: 1px solid rgba(190, 150, 100, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.admin-change-pwd-btn:hover {
+  background: rgba(255, 252, 248, 1);
+  border-color: var(--accent-gold);
+  color: var(--text-primary);
+}
+
+.shade-editor-modal {
+  max-width: 26rem;
+  text-align: left;
+}
+
+.shade-editor-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.shade-editor-color-box {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(190, 150, 100, 0.35);
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08);
+  background-color: transparent;
+  background-image:
+    linear-gradient(45deg, rgba(190, 150, 100, 0.22) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(190, 150, 100, 0.22) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(190, 150, 100, 0.22) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(190, 150, 100, 0.22) 75%);
+  background-size: 10px 10px;
+  background-position: 0 0, 0 5px, 5px -5px, -5px 0;
+}
+
+.shade-editor-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.shade-editor-fields label {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.shade-editor-fields input[type="text"],
+.shade-editor-fields input[type="color"] {
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.8125rem;
+}
+
+.shade-editor-fields input[type="color"] {
+  height: 2.25rem;
+  padding: 0.15rem;
+  cursor: pointer;
+}
+
+.shade-editor-darkness {
+  margin-top: 0.25rem;
+}
+
+.shade-editor-darkness-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(44, 26, 14, 0.55);
+}
+
+.shade-editor-darkness-value {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: rgba(44, 26, 14, 0.75);
+}
+
+.shade-editor-darkness input[type="range"] {
+  width: 100%;
+  margin-top: 0.35rem;
+  accent-color: var(--accent-gold);
+}
+
+.shade-editor-darkness-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.68rem;
+  color: rgba(44, 26, 14, 0.45);
+  line-height: 1.35;
+}
+  </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="app-container">
+        <div class="admin-bar" id="adminBar" hidden>
+          <span>Owner mode — click a foundation shade to edit color &amp; transparency</span>
+          <span class="admin-lock-note" id="adminLockNote"></span>
+          <div class="admin-bar-actions">
+            <button type="button" class="admin-save-btn" id="adminSaveBtn">Save colors</button>
+            <button type="button" class="admin-change-pwd-btn" id="adminChangePwdBtn">Change password</button>
+            <button type="button" class="admin-close-btn" id="adminCloseBtn">Close</button>
+          </div>
+        </div>
+
+        <div class="paint-controls-bar">
+          <div class="paint-control-group">
+            <span class="paint-control-label">Brush size</span>
+            <div class="paint-control-row">
+              <button type="button" class="brush-size-btn" id="brushSizeDown" aria-label="Decrease brush size">−</button>
+              <div class="paint-control-slider-stack">
+                <div class="paint-control-slider-ends">
+                  <span class="paint-control-end">Small</span>
+                  <span class="paint-control-end">Big</span>
+                </div>
+                <input type="range" class="paint-range" id="brushSizeSlider" min="12" max="96" value="36" aria-label="Brush size" />
+              </div>
+              <button type="button" class="brush-size-btn" id="brushSizeUp" aria-label="Increase brush size">+</button>
+            </div>
+          </div>
+          <div class="paint-control-group">
+            <span class="paint-control-label">Color spread</span>
+            <div class="paint-control-row">
+              <div class="paint-control-slider-stack">
+                <div class="paint-control-slider-ends">
+                  <span class="paint-control-end">Small</span>
+                  <span class="paint-control-end">Big</span>
+                </div>
+                <input type="range" class="paint-range" id="spreadSizeSlider" min="0.5" max="2" step="0.05" value="1" aria-label="Color spread size" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="app-main-grid">
+          <main>
+            <!-- FACE CANVAS AREA -->
+            <div class="face-canvas-wrap" id="faceCanvas">
+              <!-- Upload dropzone (shown when no image) -->
+              <div class="upload-dropzone" id="uploadDropzone">
+                <p class="upload-title">Upload your photo</p>
+                <p class="upload-hint">Front-facing, well-lit image works best</p>
+                <div class="upload-actions">
+                  <label class="btn btn-primary">
+                    Choose Image
+                    <input type="file" id="fileInput" accept="image/*" class="sr-only" />
+                  </label>
+                  <button type="button" class="btn btn-outline" id="takePhotoBtn">Take Photo</button>
+                </div>
+                <p class="upload-error" id="cameraError" hidden></p>
+                <p class="upload-dragnote">or drag and drop here</p>
+              </div>
+
+              <!-- Camera panel -->
+              <div class="camera-panel" id="cameraPanel" hidden>
+                <video id="cameraVideo" autoplay playsinline muted class="camera-preview"></video>
+                <div class="camera-actions">
+                  <button type="button" class="btn btn-primary" id="captureBtn">Capture Photo</button>
+                  <button type="button" class="btn btn-outline" id="cancelCameraBtn">Cancel</button>
+                </div>
+              </div>
+
+              <!-- Photo + canvases (shown when image loaded) -->
+              <div class="photo-stage" id="photoStage" hidden>
+                <div class="face-frame" id="paintArea">
+                  <img id="faceImage" alt="Face for skin analysis" draggable="false" />
+                  <canvas id="paintCanvas" class="layer makeup-paint-layer"></canvas>
+                  <canvas id="overlayCanvas" class="layer"></canvas>
+                  <img id="brushCursor" class="brush-cursor" src="{{ 'brush.png' | asset_url }}" alt="" draggable="false" hidden />
+                  <!-- <img id="brushCursor" class="brush-cursor" src="assets/brush.png" alt="" draggable="false" hidden /> -->
+                  <div id="eraseCursor" class="erase-cursor" hidden></div>
+                </div>
+
+                <div class="photo-controls">
+                  <button type="button" class="link-btn" id="clearImageBtn">Upload a different photo</button>
+                  <div class="tool-row">
+                    <div class="brush-size-inline" id="brushSizeInline">
+                      <span class="brush-size-inline-label">Brush</span>
+                      <button type="button" class="brush-size-btn" id="brushSizeDownInline" aria-label="Decrease brush size">−</button>
+                      <span class="brush-size-value" id="brushSizeValue">36</span>
+                      <button type="button" class="brush-size-btn" id="brushSizeUpInline" aria-label="Increase brush size">+</button>
+                    </div>
+                    <button type="button" class="btn btn-chip" id="eraseBtn">Erase</button>
+                    <button type="button" class="btn btn-chip" id="clearMakeupBtn" hidden>Clear all</button>
+                  </div>
+                  <p class="status-text" id="brushStatus" hidden></p>
+                  <p class="status-text" id="eraseStatus" hidden>Erase mode — drag to remove makeup</p>
+                  <p class="status-text" id="moveStatus" hidden>
+                    Face detected — shapes placed on cheeks · Unselect brush, then drag to move · Arrow keys for fine adjust
+                  </p>
+                  <button type="button" class="link-btn" id="resetSwatchBtn" hidden>Reset swatch positions</button>
+                </div>
+              </div>
+
+              <!-- Loading -->
+              <div class="loading-row" id="loadingRow" hidden>
+                <div class="spinner"></div>
+                <span>Analyzing your skin tone…</span>
+              </div>
+
+              <!-- Error -->
+              <div class="error-box" id="errorBox" hidden></div>
+
+              <!-- Re-analyze / Try again -->
+              <button type="button" class="reanalyze-btn" id="reanalyzeBtn" hidden></button>
+            </div>
+          </main>
+
+          <aside>
+            <div class="right-panel">
+              <div class="right-panel-card">
+                <h2 class="panel-title">Foundation Shades</h2>
+                <div class="powder-list" id="powderList"></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- Shade selector -->
+        <section class="shade-selector-section">
+          <div class="owner-unlock-zone" id="ownerUnlockTarget">
+            <div class="divider-row">
+              <div class="divider-ornament"></div>
+              <h2 class="selector-title">Choose Your Shade</h2>
+              <div class="divider-ornament"></div>
+            </div>
+            <p class="selector-hint" id="selectorHint">Upload your photo first, then select a shade to paint</p>
+          </div>
+          <div class="shade-selector-grid" id="shadeGrid"></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="app-footer" id="appFooter"></footer>
+      </div>
+    </div>
+
+    <!-- Admin password modal -->
+    <div class="admin-modal-backdrop" id="adminPasswordBackdrop" hidden>
+      <div class="admin-modal" role="dialog" aria-labelledby="adminPasswordTitle">
+        <div id="adminUnlockPanel">
+          <h3 id="adminPasswordTitle">Owner access</h3>
+          <p id="adminPasswordDesc">Enter password to edit foundation shades</p>
+          <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="current-password" />
+          <p class="admin-modal-error" id="adminPasswordError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminPasswordSubmit">Unlock</button>
+            <button type="button" class="btn btn-outline" id="adminPasswordCancel">Cancel</button>
+          </div>
+          <button type="button" class="admin-modal-link-btn" id="adminPasswordChangeBtn">Change password</button>
+        </div>
+
+        <div id="adminChangeOldPanel" hidden>
+          <h3>Change password</h3>
+          <p>Enter your current password</p>
+          <input type="password" id="adminOldPasswordInput" placeholder="Current password" autocomplete="current-password" />
+          <p class="admin-modal-error" id="adminChangeOldError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminChangeOldNext">Next</button>
+            <button type="button" class="btn btn-outline" id="adminChangeOldBack">Back</button>
+            <button type="button" class="btn btn-outline" id="adminChangeOldCancel">Cancel</button>
+          </div>
+        </div>
+
+        <div id="adminChangeNewPanel" hidden>
+          <h3>Change password</h3>
+          <p>Enter your new password</p>
+          <input type="password" id="adminNewPasswordInput" placeholder="New password" autocomplete="new-password" />
+          <input type="password" id="adminConfirmPasswordInput" placeholder="Confirm new password" autocomplete="new-password" />
+          <p class="admin-modal-error" id="adminChangeNewError" hidden></p>
+          <div class="admin-modal-actions">
+            <button type="button" class="btn btn-primary" id="adminChangeSave">Save password</button>
+            <button type="button" class="btn btn-outline" id="adminChangeNewBack">Back</button>
+            <button type="button" class="btn btn-outline" id="adminChangeNewCancel">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shade editor modal (owner mode) -->
+    <div class="admin-modal-backdrop" id="shadeEditorBackdrop" hidden>
+      <div class="admin-modal shade-editor-modal" role="dialog" aria-labelledby="shadeEditorTitle">
+        <h3 id="shadeEditorTitle">Edit shade</h3>
+        <div class="shade-editor-preview">
+          <div class="shade-editor-color-box" id="shadeEditorPreview"></div>
+          <div class="shade-editor-fields">
+            <label>
+              Hex color
+              <input type="text" id="shadeEditorHex" placeholder="#FBE1D9" maxlength="7" />
+            </label>
+            <label>
+              Pick color
+              <input type="color" id="shadeEditorPicker" />
+            </label>
+          </div>
+        </div>
+        <label class="shade-editor-darkness">
+          <span class="shade-editor-darkness-row">
+            <span>Transparent paint</span>
+            <span class="shade-editor-darkness-value" id="shadeEditorDarknessValue">100%</span>
+          </span>
+          <input type="range" id="shadeEditorDarkness" min="10" max="100" step="1" value="100" aria-label="Transparent paint amount" />
+          <span class="shade-editor-darkness-hint">Same color · lower % = more sheer on skin</span>
+        </label>
+        <p class="admin-modal-error" id="shadeEditorError" hidden></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-primary" id="shadeEditorApply">Apply</button>
+          <button type="button" class="btn btn-outline" id="shadeEditorCancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-scroll-knob" id="mobileScrollKnob" hidden aria-label="Drag to scroll"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+    <script>
+/* ============================================================
+   Mineraz Skin Shade Analyzer — vanilla HTML/CSS/JS port
+   ============================================================ */
+
+/* ---------- Data ---------- */
+const BUY_BASE = 'https://mineraz.com/products/%D7%9E%D7%99%D7%99%D7%A7%D7%90%D7%A4-%D7%9E%D7%99%D7%A0%D7%A8%D7%9C%D7%99-';
+
+/* TEMPORARY: local asset paths for standalone testing (restore Shopify asset_url in production) */
+const ASSET = (name) => name;
+
+const SHADES = [
+  { id: 1,   name: '#1 Porcelain', descriptor: 'Very Fair',    undertone: 'Cool',         hex: '#FBE1D9', opacity: 1, match: 72, image: '{{ "shade-1.png" | asset_url }}',   buy: `${BUY_BASE}1-new-collection` },
+  { id: 2,   name: '#2 Ivory',     descriptor: 'Light Neutral', undertone: 'Neutral',     hex: '#E9C6A8', opacity: 1, match: 88, image: '{{ "shade-2.png" | asset_url }}',   buy: `${BUY_BASE}2-new-collection` },
+  { id: 2.5, name: '#2.5 Sand',    descriptor: 'In Between',   undertone: 'Neutral Warm', hex: '#DBBF9E', opacity: 1, match: 92, image: '{{ "shade-2.5.png" | asset_url }}', buy: `${BUY_BASE}2-5-new-collection-%D7%92%D7%95%D7%95%D7%9F-%D7%97%D7%93%D7%A9` },
+  { id: 3,   name: '#3 Beige',     descriptor: 'Warm',         undertone: 'Warm Neutral', hex: '#E5B279', opacity: 1, match: 95, image: '{{ "shade-3.png" | asset_url }}',   buy: `${BUY_BASE}3-new-collection` },
+  { id: 4,   name: '#4 Caramel',   descriptor: 'Medium Warm',  undertone: 'Warm',         hex: '#F2DBC8', opacity: 1, match: 88, image: '{{ "shade-4.png" | asset_url }}',   buy: `${BUY_BASE}4-new-collection` },
+  { id: 5,   name: '#5 Toffee',    descriptor: 'Medium Deep',  undertone: 'Warm Olive',   hex: '#B57158', opacity: 1, match: 85, image: '{{ "shade-5.png" | asset_url }}',   buy: `${BUY_BASE}5-new-collection` },
+  { id: 6,   name: '#6 Espresso',  descriptor: 'Deep',         undertone: 'Warm Deep',    hex: '#C2A787', opacity: 1, match: 78, image: '{{ "shade-6.png" | asset_url }}',   buy: `${BUY_BASE}6-new-collection` },
+];
+
+const ADMIN_PASSWORD_HASH = '9da696304b3165bb6b693478815834d32d9fdde622c7f18a0f6a57f45c746af9';
+const ADMIN_PASSWORD_STORAGE_KEY = 'mineraz-admin-password-hash';
+const SHADES_STORAGE_KEY = 'mineraz-shades-config';
+const ADMIN_SESSION_KEY = 'mineraz-admin-session';
+const MIN_PASSWORD_LENGTH = 6;
+
+const LEFT_CHEEK_SHADE_IDS = [1, 2, 2.5, 3];
+const RIGHT_CHEEK_SHADE_IDS = [4, 5, 6];
+const DEFAULT_BEST_MATCH_ID = 3;
+
+const BRUSH_MAKEUP_ALPHA = 0.15;
+const BRUSH_DISPLAY_OPACITY = 0.6;
+const DEFAULT_BRUSH_SIZE = 36;
+const MIN_BRUSH_SIZE = 12;
+const MAX_BRUSH_SIZE = 96;
+const BRUSH_SIZE_STEP = 4;
+const BRUSH_CURSOR_BASE_PX = 62;
+const DEFAULT_SPREAD = 1;
+
+const SWATCH_MOVE_STEP_PX = 3;
+const SWATCH_MOVE_STEP_LARGE_PX = 12;
+const SWATCH_OVERLAY_LENGTH_SCALE = 1.75;
+const SWATCH_OVERLAY_TIP_SCALE = 1.15;
+
+const BADGES = [
+  { icon: '💎', label: '100% Mineral Makeup' },
+  { icon: '✡️', label: 'Kosher Certified' },
+  { icon: '🌿', label: 'Sensitive Skin Friendly' },
+  { icon: '🇮🇱', label: 'Made in Israel' },
+  { icon: '🐰', label: 'Cruelty Free' },
+  { icon: '⭐', label: 'Premium Ingredients' },
+];
+
+function getShadeById(id) {
+  return SHADES.find((s) => s.id === id) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
+}
+function getShadesByIds(ids) {
+  return ids.map((id) => getShadeById(id));
+}
+const leftShades = getShadesByIds(LEFT_CHEEK_SHADE_IDS);
+const rightShades = getShadesByIds(RIGHT_CHEEK_SHADE_IDS);
+
+/* ---------- Color helpers ---------- */
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function getMakeupDisplayOpacity(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return BRUSH_DISPLAY_OPACITY * (0.9 + luminance * 0.14);
+}
+
+function normalizeHex(hex) {
+  const cleaned = hex.trim().replace(/^#/, '');
+  if (!/^[0-9a-fA-F]{6}$/.test(cleaned)) return null;
+  return `#${cleaned.toUpperCase()}`;
+}
+
+function getShadeOpacity(shade) {
+  if (!shade) return 1;
+  const value = shade.opacity ?? shade.darkness ?? 1;
+  return Math.max(0.1, Math.min(1, value));
+}
+
+function getShadeOpacityPercent(shade) {
+  return Math.round(getShadeOpacity(shade) * 100);
+}
+
+function opacityFromPercent(percent) {
+  return Math.max(0.1, Math.min(1, Number(percent) / 100));
+}
+
+async function hashPassword(password) {
+  const data = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+function getAdminPasswordHash() {
+  return localStorage.getItem(ADMIN_PASSWORD_STORAGE_KEY) || ADMIN_PASSWORD_HASH;
+}
+
+function saveAdminPasswordHash(hash) {
+  localStorage.setItem(ADMIN_PASSWORD_STORAGE_KEY, hash);
+}
+
+function loadSavedShades() {
+  try {
+    const raw = localStorage.getItem(SHADES_STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!Array.isArray(saved)) return;
+    saved.forEach((entry) => {
+      const shade = SHADES.find((s) => s.id === entry.id);
+      if (!shade) return;
+      if (entry.hex) shade.hex = normalizeHex(entry.hex) ?? shade.hex;
+      if (typeof entry.opacity === 'number') shade.opacity = entry.opacity;
+      else if (typeof entry.darkness === 'number') shade.opacity = entry.darkness;
+    });
+  } catch {
+    /* ignore corrupt storage */
+  }
+}
+
+function saveShadesToStorage() {
+  const payload = SHADES.map((s) => ({ id: s.id, hex: s.hex, opacity: getShadeOpacity(s) }));
+  localStorage.setItem(SHADES_STORAGE_KEY, JSON.stringify(payload));
+}
+
+let brushSize = DEFAULT_BRUSH_SIZE;
+let spreadFactor = DEFAULT_SPREAD;
+let ownerClickCount = 0;
+let ownerClickTimer = null;
+const OWNER_CLICKS_REQUIRED = 3;
+const OWNER_CLICK_WINDOW_MS = 1200;
+
+function getEraseSize() {
+  return Math.round(brushSize * 0.94);
+}
+
+function getBrushCursorWidth() {
+  return BRUSH_CURSOR_BASE_PX * (brushSize / DEFAULT_BRUSH_SIZE);
+}
+
+function syncBrushSizeUI() {
+  dom.brushSizeSlider.value = String(brushSize);
+  if (dom.brushSizeValue) dom.brushSizeValue.textContent = String(brushSize);
+  dom.brushCursor.style.width = `${getBrushCursorWidth()}px`;
+}
+
+function setBrushSize(next) {
+  brushSize = Math.max(MIN_BRUSH_SIZE, Math.min(MAX_BRUSH_SIZE, next));
+  syncBrushSizeUI();
+}
+
+function nudgeBrushSize(delta) {
+  setBrushSize(brushSize + delta);
+}
+
+/* ---------- Brush painting ---------- */
+function drawSoftDab(ctx, x, y, radius, colorFn, spread = 1) {
+  const grad = ctx.createRadialGradient(x, y, 0, x, y, radius * spread);
+  grad.addColorStop(0, colorFn(0.75));
+  grad.addColorStop(Math.min(0.45 * spread, 0.95), colorFn(0.5));
+  grad.addColorStop(Math.min(0.72 * spread, 0.98), colorFn(0.22));
+  grad.addColorStop(1, colorFn(0));
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(x, y, radius * spread, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawBrushDab(ctx, x, y, shadeHex, shadeOpacity = 1) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha = 1;
+  const alpha = BRUSH_MAKEUP_ALPHA * shadeOpacity;
+  drawSoftDab(ctx, x, y, brushSize, (strength) => hexToRgba(shadeHex, alpha * strength), spreadFactor);
+  ctx.restore();
+}
+
+function drawEraseDab(ctx, x, y) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  const eraseSize = getEraseSize();
+  drawSoftDab(ctx, x, y, eraseSize, (t) => `rgba(0, 0, 0, ${t})`);
+  ctx.restore();
+}
+
+function paintStroke(ctx, x, y, prevX, prevY, shadeHex, shadeOpacity = 1) {
+  if (prevX == null || prevY == null) {
+    drawBrushDab(ctx, x, y, shadeHex, shadeOpacity);
+    return;
+  }
+  const dist = Math.hypot(x - prevX, y - prevY);
+  const steps = Math.max(1, Math.ceil(dist / (brushSize * 0.28)));
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    drawBrushDab(ctx, prevX + (x - prevX) * t, prevY + (y - prevY) * t, shadeHex, shadeOpacity);
+  }
+}
+
+function eraseStroke(ctx, x, y, prevX, prevY) {
+  if (prevX == null || prevY == null) {
+    drawEraseDab(ctx, x, y);
+    return;
+  }
+  const dist = Math.hypot(x - prevX, y - prevY);
+  const eraseSize = getEraseSize();
+  const steps = Math.max(1, Math.ceil(dist / (eraseSize * 0.22)));
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    drawEraseDab(ctx, prevX + (x - prevX) * t, prevY + (y - prevY) * t);
+  }
+}
+
+/* ---------- Swatch shapes ---------- */
+function drawMakeupSmearPath(ctx, cx, cy, length, thickness, bulbOnRight, earSideScale = 1, centerTipScale = 1) {
+  const r = thickness / 2;
+  const tipX = cx - length * 0.48 * centerTipScale;
+  const capCx = cx + length * 0.24 * earSideScale - r * 0.32;
+  const bellyX = cx - length * 0.18 * centerTipScale;
+
+  const buildPath = () => {
+    ctx.beginPath();
+    ctx.moveTo(tipX, cy);
+    ctx.quadraticCurveTo(bellyX, cy + r * 1.02, capCx, cy + r);
+    ctx.arc(capCx, cy, r, Math.PI / 2, -Math.PI / 2, true);
+    ctx.quadraticCurveTo(bellyX, cy - r * 1.02, tipX, cy);
+    ctx.closePath();
+  };
+
+  ctx.save();
+  if (!bulbOnRight) {
+    ctx.translate(cx, 0);
+    ctx.scale(-1, 1);
+    ctx.translate(-cx, 0);
+  }
+  buildPath();
+  ctx.restore();
+}
+
+function isLeftCheekShade(id) {
+  return id === 1 || id === 2 || id === 2.5 || id === 3;
+}
+
+function computeAnchoredSwatchPlacements(swatchAnchors, barWidth, shades, scaleX, scaleY, swatchOffsets, activeShadeId) {
+  if (!swatchAnchors) return [];
+  swatchOffsets = swatchOffsets || {};
+  return shades
+    .map((shade) => {
+      const anchor = swatchAnchors[shade.id];
+      if (!anchor) return null;
+
+      const isActive = shade.id === activeShadeId;
+      const opacity = isActive ? 0.82 : 0.56;
+      const offset = swatchOffsets[shade.id] ?? { x: 0, y: 0 };
+      const bulbOnRight = !isLeftCheekShade(shade.id);
+      const baseW = barWidth * ((scaleX + scaleY) / 2);
+
+      return {
+        id: shade.id,
+        shade,
+        cx: anchor.x * scaleX + offset.x,
+        cy: anchor.y * scaleY + offset.y,
+        smearLength: baseW * SWATCH_OVERLAY_LENGTH_SCALE,
+        smearThickness: baseW * 0.27,
+        bulbOnRight,
+        earSideScale: 0.46,
+        centerTipScale: SWATCH_OVERLAY_TIP_SCALE,
+        opacity,
+        isActive,
+      };
+    })
+    .filter(Boolean);
+}
+
+function hitTestSwatch(x, y, p) {
+  const pad = p.smearThickness * 0.35;
+  const left = p.cx - p.smearLength * (p.bulbOnRight ? 0.55 : 0.3) - pad;
+  const right = p.cx + p.smearLength * (p.bulbOnRight ? 0.3 : 0.55) + pad;
+  const top = p.cy - p.smearThickness * 0.72 - pad;
+  const bottom = p.cy + p.smearThickness * 0.72 + pad;
+  return x >= left && x <= right && y >= top && y <= bottom;
+}
+
+function hitTestSwatches(x, y, placements) {
+  for (let i = placements.length - 1; i >= 0; i--) {
+    if (hitTestSwatch(x, y, placements[i])) return placements[i].id;
+  }
+  return null;
+}
+
+function drawSwatchPlacements(ctx, placements, highlightId) {
+  placements.forEach((p) => {
+    const { id, shade, cx, cy, smearLength, smearThickness, bulbOnRight, earSideScale, centerTipScale, opacity, isActive } = p;
+    const textOffsetX = bulbOnRight ? smearLength * 0.12 : -smearLength * 0.12;
+
+    ctx.save();
+    ctx.fillStyle = hexToRgba(shade.hex, opacity * getShadeOpacity(shade));
+    drawMakeupSmearPath(ctx, cx, cy, smearLength, smearThickness, bulbOnRight, earSideScale, centerTipScale);
+    ctx.fill();
+    ctx.restore();
+
+    if (id === highlightId) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(201, 169, 110, 0.95)';
+      ctx.lineWidth = 2;
+      const pad = 4;
+      const left = cx - smearLength * (bulbOnRight ? 0.55 : 0.3) - pad;
+      const right = cx + smearLength * (bulbOnRight ? 0.3 : 0.55) + pad;
+      const top = cy - smearThickness * 0.72 - pad;
+      const bottom = cy + smearThickness * 0.72 + pad;
+      ctx.strokeRect(left, top, right - left, bottom - top);
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.fillStyle = isActive ? 'rgba(255,255,255,0.98)' : 'rgba(255,255,255,0.92)';
+    ctx.font = `bold ${Math.max(11, smearThickness * 0.52)}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(String(id), cx + textOffsetX, cy);
+    ctx.restore();
+  });
+}
+
+/* ---------- Face detection ---------- */
+const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model';
+let modelsLoaded = false;
+let modelsLoading = null;
+
+async function loadModels() {
+  if (modelsLoaded) return;
+  if (modelsLoading) return modelsLoading;
+  modelsLoading = Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+  ]).then(() => {
+    modelsLoaded = true;
+  });
+  return modelsLoading;
+}
+
+const FACE_OVAL_INDICES = [
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+  26, 25, 24, 23, 22, 21, 20, 19, 18, 17,
+];
+function getFaceContour(points) {
+  return FACE_OVAL_INDICES.map((i) => ({ x: points[i].x, y: points[i].y }));
+}
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+function getSwatchAnchors(points) {
+  const faceWidth = Math.abs(points[16].x - points[0].x);
+  const faceCenterX = (points[0].x + points[16].x) / 2;
+
+  const leftJawX = (points[2].x + points[3].x) / 2;
+  const rightJawX = (points[13].x + points[14].x) / 2;
+  const leftCheekX = lerp(leftJawX, faceCenterX, 0.3);
+  const rightCheekX = lerp(rightJawX, faceCenterX, 0.3);
+
+  const cheekTopY = (points[2].y + points[14].y) / 2 + faceWidth * 0.012;
+  const cheekBottomY = lerp(points[6].y, points[8].y, 0.45);
+  const cheekSpan = cheekBottomY - cheekTopY;
+
+  const y1 = cheekTopY + cheekSpan * 0.06;
+  const y2 = cheekTopY + cheekSpan * 0.3;
+  const y25 = cheekTopY + cheekSpan * 0.52;
+  const y3 = cheekTopY + cheekSpan * 0.9;
+  const chinX = lerp(points[6].x, points[8].x, 0.42);
+
+  return {
+    barWidth: faceWidth * 0.22,
+    anchors: {
+      1: { x: leftCheekX, y: y1 },
+      2: { x: leftCheekX, y: y2 },
+      2.5: { x: leftCheekX, y: y25 },
+      3: { x: chinX, y: y3 },
+      4: { x: rightCheekX, y: y1 },
+      5: { x: rightCheekX, y: y2 },
+      6: { x: rightCheekX, y: y25 },
+    },
+  };
+}
+
+function createDetectionCanvas(imageElement) {
+  const width = imageElement.naturalWidth || imageElement.width;
+  const height = imageElement.naturalHeight || imageElement.height;
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(imageElement, 0, 0, width, height);
+  return { canvas, width, height };
+}
+
+function getCheekRegions(landmarks, imageWidth, imageHeight) {
+  const points = landmarks.positions;
+  const { anchors, barWidth } = getSwatchAnchors(points);
+  return {
+    swatchAnchors: anchors,
+    barWidth,
+    faceContour: getFaceContour(points),
+    imageWidth,
+    imageHeight,
+  };
+}
+
+/* ============================================================
+   Application state + DOM wiring
+   ============================================================ */
+const dom = {
+  fileInput: document.getElementById('fileInput'),
+  takePhotoBtn: document.getElementById('takePhotoBtn'),
+  uploadDropzone: document.getElementById('uploadDropzone'),
+  cameraError: document.getElementById('cameraError'),
+  cameraPanel: document.getElementById('cameraPanel'),
+  cameraVideo: document.getElementById('cameraVideo'),
+  captureBtn: document.getElementById('captureBtn'),
+  cancelCameraBtn: document.getElementById('cancelCameraBtn'),
+  photoStage: document.getElementById('photoStage'),
+  paintArea: document.getElementById('paintArea'),
+  faceImage: document.getElementById('faceImage'),
+  paintCanvas: document.getElementById('paintCanvas'),
+  overlayCanvas: document.getElementById('overlayCanvas'),
+  brushCursor: document.getElementById('brushCursor'),
+  eraseCursor: document.getElementById('eraseCursor'),
+  clearImageBtn: document.getElementById('clearImageBtn'),
+  eraseBtn: document.getElementById('eraseBtn'),
+  clearMakeupBtn: document.getElementById('clearMakeupBtn'),
+  brushStatus: document.getElementById('brushStatus'),
+  eraseStatus: document.getElementById('eraseStatus'),
+  moveStatus: document.getElementById('moveStatus'),
+  resetSwatchBtn: document.getElementById('resetSwatchBtn'),
+  loadingRow: document.getElementById('loadingRow'),
+  errorBox: document.getElementById('errorBox'),
+  reanalyzeBtn: document.getElementById('reanalyzeBtn'),
+  powderList: document.getElementById('powderList'),
+  shadeGrid: document.getElementById('shadeGrid'),
+  selectorHint: document.getElementById('selectorHint'),
+  appFooter: document.getElementById('appFooter'),
+  brushSizeSlider: document.getElementById('brushSizeSlider'),
+  brushSizeValue: document.getElementById('brushSizeValue'),
+  brushSizeDown: document.getElementById('brushSizeDown'),
+  brushSizeUp: document.getElementById('brushSizeUp'),
+  brushSizeDownInline: document.getElementById('brushSizeDownInline'),
+  brushSizeUpInline: document.getElementById('brushSizeUpInline'),
+  spreadSizeSlider: document.getElementById('spreadSizeSlider'),
+  ownerUnlockTarget: document.getElementById('ownerUnlockTarget'),
+  adminBar: document.getElementById('adminBar'),
+  adminLockNote: document.getElementById('adminLockNote'),
+  adminSaveBtn: document.getElementById('adminSaveBtn'),
+  adminChangePwdBtn: document.getElementById('adminChangePwdBtn'),
+  adminCloseBtn: document.getElementById('adminCloseBtn'),
+  adminPasswordBackdrop: document.getElementById('adminPasswordBackdrop'),
+  adminUnlockPanel: document.getElementById('adminUnlockPanel'),
+  adminChangeOldPanel: document.getElementById('adminChangeOldPanel'),
+  adminChangeNewPanel: document.getElementById('adminChangeNewPanel'),
+  adminPasswordInput: document.getElementById('adminPasswordInput'),
+  adminPasswordError: document.getElementById('adminPasswordError'),
+  adminPasswordSubmit: document.getElementById('adminPasswordSubmit'),
+  adminPasswordCancel: document.getElementById('adminPasswordCancel'),
+  adminPasswordChangeBtn: document.getElementById('adminPasswordChangeBtn'),
+  adminOldPasswordInput: document.getElementById('adminOldPasswordInput'),
+  adminChangeOldError: document.getElementById('adminChangeOldError'),
+  adminChangeOldNext: document.getElementById('adminChangeOldNext'),
+  adminChangeOldBack: document.getElementById('adminChangeOldBack'),
+  adminChangeOldCancel: document.getElementById('adminChangeOldCancel'),
+  adminNewPasswordInput: document.getElementById('adminNewPasswordInput'),
+  adminConfirmPasswordInput: document.getElementById('adminConfirmPasswordInput'),
+  adminChangeNewError: document.getElementById('adminChangeNewError'),
+  adminChangeSave: document.getElementById('adminChangeSave'),
+  adminChangeNewBack: document.getElementById('adminChangeNewBack'),
+  adminChangeNewCancel: document.getElementById('adminChangeNewCancel'),
+  mobileScrollKnob: document.getElementById('mobileScrollKnob'),
+  shadeEditorBackdrop: document.getElementById('shadeEditorBackdrop'),
+  shadeEditorTitle: document.getElementById('shadeEditorTitle'),
+  shadeEditorPreview: document.getElementById('shadeEditorPreview'),
+  shadeEditorHex: document.getElementById('shadeEditorHex'),
+  shadeEditorPicker: document.getElementById('shadeEditorPicker'),
+  shadeEditorDarkness: document.getElementById('shadeEditorDarkness'),
+  shadeEditorDarknessValue: document.getElementById('shadeEditorDarknessValue'),
+  shadeEditorError: document.getElementById('shadeEditorError'),
+  shadeEditorApply: document.getElementById('shadeEditorApply'),
+  shadeEditorCancel: document.getElementById('shadeEditorCancel'),
+};
+
+const state = {
+  imageSrc: null,
+  activeShadeId: null,
+  isLoading: false,
+  error: null,
+  analyzed: false,
+  cheekRegions: null,
+  eraseMode: false,
+  showCamera: false,
+  hasPaint: false,
+  swatchOffsets: {},
+  hoveredSwatchId: null,
+  draggingSwatchId: null,
+  adminAuthenticated: false,
+  shadesLocked: Boolean(localStorage.getItem(SHADES_STORAGE_KEY)),
+  editingShadeId: null,
+};
+
+// canvas working refs
+let paintLayer = null;
+let paintedShadeHex = null;
+let lastPoint = null;
+let isPainting = false;
+let dpr = 1;
+let canvasSize = { w: 0, h: 0 };
+let stream = null;
+let draggingSwatch = null;
+let detectStarted = false;
+let detectAttempts = 0;
+let animFrame = null;
+let pendingTouch = null;
+let scrollKnobDrag = null;
+
+const MOBILE_SCROLL_THRESHOLD = 10;
+const MOBILE_PAINT_THRESHOLD = 8;
+const SCROLL_KNOB_SIZE = 28;
+const SCROLL_KNOB_MARGIN = 12;
+
+function isMobileLayout() {
+  return window.matchMedia('(max-width: 768px)').matches;
+}
+
+function isMobileTouch(e) {
+  return isMobileLayout() && e.pointerType === 'touch';
+}
+
+function getScrollMetrics() {
+  const scrollHeight = document.documentElement.scrollHeight;
+  const clientHeight = document.documentElement.clientHeight;
+  const maxScroll = Math.max(0, scrollHeight - clientHeight);
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  return { scrollTop, maxScroll, clientHeight };
+}
+
+function updateScrollKnobPosition() {
+  if (!dom.mobileScrollKnob || dom.mobileScrollKnob.hidden) return;
+  const { scrollTop, maxScroll, clientHeight } = getScrollMetrics();
+  const travel = Math.max(0, clientHeight - SCROLL_KNOB_SIZE - SCROLL_KNOB_MARGIN * 2);
+  const top = SCROLL_KNOB_MARGIN + (maxScroll > 0 ? (scrollTop / maxScroll) * travel : 0);
+  dom.mobileScrollKnob.style.top = `${top}px`;
+}
+
+function syncScrollKnob() {
+  if (!dom.mobileScrollKnob) return;
+  dom.mobileScrollKnob.hidden = !(isMobileLayout() && Boolean(state.imageSrc));
+  if (!dom.mobileScrollKnob.hidden) updateScrollKnobPosition();
+}
+
+function syncTouchLock() {
+  const lockTouch = !isMobileLayout() && (isToolActive() || Boolean(draggingSwatch) || isPainting);
+  dom.paintArea.classList.toggle('face-frame--touch-lock', lockTouch);
+}
+
+function startPainting(e, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  isPainting = true;
+  syncTouchLock();
+  if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
+  else applyPaintAt(coords.x, coords.y, true);
+}
+
+function startSwatchDrag(e, hitId, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
+  draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
+  state.draggingSwatchId = hitId;
+  syncTouchLock();
+  renderView();
+}
+
+/* ---------- derived helpers ---------- */
+function getActiveShade() {
+  return state.activeShadeId != null ? getShadeById(state.activeShadeId) : null;
+}
+function isBrushActive() {
+  return Boolean(state.imageSrc && getActiveShade() && !state.eraseMode && !state.draggingSwatchId);
+}
+function isEraseActive() {
+  return Boolean(state.imageSrc && state.eraseMode);
+}
+function isToolActive() {
+  return isBrushActive() || isEraseActive();
+}
+function isSwatchMoveActive() {
+  return Boolean(state.analyzed && !state.eraseMode && !isToolActive());
+}
+function highlightSwatchId() {
+  return state.draggingSwatchId ?? state.hoveredSwatchId;
+}
+
+function parseShadeId(value) {
+  return value.includes('.') ? parseFloat(value) : Number(value);
+}
+
+function canEditShade(shadeId) {
+  if (!state.adminAuthenticated) return false;
+  if (!state.shadesLocked) return true;
+  return state.activeShadeId === shadeId;
+}
+
+function syncAdminBar() {
+  if (!state.adminAuthenticated) {
+    dom.adminBar.hidden = true;
+    return;
+  }
+  dom.adminBar.hidden = false;
+  dom.adminLockNote.textContent = state.shadesLocked
+    ? 'Saved — only the active paint shade can be edited'
+    : 'Unsaved changes — click Save to lock colors';
+}
+
+function updateShadeEditorPreview(hex, opacityPercent) {
+  const opacity = opacityFromPercent(opacityPercent);
+  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(hex, opacity);
+  dom.shadeEditorDarknessValue.textContent = `${Math.round(opacityPercent)}%`;
+}
+
+function openShadeEditor(shadeId) {
+  if (!canEditShade(shadeId)) return;
+  const shade = getShadeById(shadeId);
+  const opacityPercent = getShadeOpacityPercent(shade);
+  state.editingShadeId = shadeId;
+  dom.shadeEditorTitle.textContent = `Edit shade ${shade.id}`;
+  dom.shadeEditorHex.value = shade.hex;
+  dom.shadeEditorPicker.value = shade.hex;
+  dom.shadeEditorDarkness.value = String(opacityPercent);
+  dom.shadeEditorError.hidden = true;
+  updateShadeEditorPreview(shade.hex, opacityPercent);
+  dom.shadeEditorBackdrop.hidden = false;
+}
+
+function closeShadeEditor() {
+  state.editingShadeId = null;
+  dom.shadeEditorBackdrop.hidden = true;
+}
+
+function applyShadeEditor() {
+  const shadeId = state.editingShadeId;
+  if (shadeId == null) return;
+  const norm = normalizeHex(dom.shadeEditorHex.value);
+  if (!norm) {
+    dom.shadeEditorError.hidden = false;
+    dom.shadeEditorError.textContent = 'Enter a valid hex color (e.g. #FBE1D9)';
+    return;
+  }
+  const shade = getShadeById(shadeId);
+  shade.hex = norm;
+  shade.opacity = opacityFromPercent(dom.shadeEditorDarkness.value);
+  delete shade.darkness;
+  closeShadeEditor();
+  renderShadePanels();
+  renderOverlay();
+  renderView();
+}
+
+async function promptAdminPassword() {
+  clearPasswordModalFields();
+  showPasswordPanel('unlock');
+  dom.adminPasswordBackdrop.hidden = false;
+  dom.adminPasswordInput.focus();
+}
+
+function promptChangePassword() {
+  clearPasswordModalFields();
+  showPasswordPanel('change-old');
+  dom.adminPasswordBackdrop.hidden = false;
+  dom.adminOldPasswordInput.focus();
+}
+
+async function verifyAdminPassword() {
+  const password = dom.adminPasswordInput.value;
+  const hash = await hashPassword(password);
+  if (hash !== getAdminPasswordHash()) {
+    dom.adminPasswordError.hidden = false;
+    dom.adminPasswordError.textContent = 'Incorrect password';
+    return;
+  }
+  state.adminAuthenticated = true;
+  sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+  hidePasswordModal();
+  syncAdminBar();
+  renderShadePanels();
+}
+
+async function verifyOldPasswordForChange() {
+  const password = dom.adminOldPasswordInput.value;
+  if (!password) {
+    dom.adminChangeOldError.hidden = false;
+    dom.adminChangeOldError.textContent = 'Enter your current password';
+    return;
+  }
+  const hash = await hashPassword(password);
+  if (hash !== getAdminPasswordHash()) {
+    dom.adminChangeOldError.hidden = false;
+    dom.adminChangeOldError.textContent = 'Current password is incorrect';
+    return;
+  }
+  dom.adminChangeOldError.hidden = true;
+  dom.adminNewPasswordInput.value = '';
+  dom.adminConfirmPasswordInput.value = '';
+  dom.adminChangeNewError.hidden = true;
+  showPasswordPanel('change-new');
+  dom.adminNewPasswordInput.focus();
+}
+
+async function saveNewAdminPassword() {
+  const newPassword = dom.adminNewPasswordInput.value;
+  const confirmPassword = dom.adminConfirmPasswordInput.value;
+  if (newPassword.length < MIN_PASSWORD_LENGTH) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = `New password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    return;
+  }
+  if (newPassword !== confirmPassword) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = 'New passwords do not match';
+    return;
+  }
+  const newHash = await hashPassword(newPassword);
+  if (newHash === getAdminPasswordHash()) {
+    dom.adminChangeNewError.hidden = false;
+    dom.adminChangeNewError.textContent = 'New password must be different from the current password';
+    return;
+  }
+  saveAdminPasswordHash(newHash);
+  hidePasswordModal();
+  state.adminAuthenticated = true;
+  sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+  syncAdminBar();
+  renderShadePanels();
+  alert('Password changed successfully.');
+}
+
+function showPasswordPanel(panel) {
+  dom.adminUnlockPanel.hidden = panel !== 'unlock';
+  dom.adminChangeOldPanel.hidden = panel !== 'change-old';
+  dom.adminChangeNewPanel.hidden = panel !== 'change-new';
+}
+
+function hidePasswordModal() {
+  dom.adminPasswordBackdrop.hidden = true;
+  showPasswordPanel('unlock');
+}
+
+function clearPasswordModalFields() {
+  dom.adminPasswordInput.value = '';
+  dom.adminOldPasswordInput.value = '';
+  dom.adminNewPasswordInput.value = '';
+  dom.adminConfirmPasswordInput.value = '';
+  dom.adminPasswordError.hidden = true;
+  dom.adminChangeOldError.hidden = true;
+  dom.adminChangeNewError.hidden = true;
+}
+
+function saveAdminShades() {
+  saveShadesToStorage();
+  state.shadesLocked = true;
+  syncAdminBar();
+  renderShadePanels();
+  renderOverlay();
+  renderView();
+  const btn = dom.adminSaveBtn;
+  const prevLabel = btn.textContent;
+  btn.textContent = 'Saved!';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = prevLabel;
+    btn.disabled = false;
+  }, 1800);
+}
+
+function closeAdminMode() {
+  closeShadeEditor();
+  hidePasswordModal();
+  state.adminAuthenticated = false;
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  syncAdminBar();
+  renderShadePanels();
+  renderOverlay();
+  renderView();
+}
+
+function initAdminMode() {
+  loadSavedShades();
+  if (sessionStorage.getItem(ADMIN_SESSION_KEY) === '1') {
+    state.adminAuthenticated = true;
+    syncAdminBar();
+  }
+}
+
+function handleOwnerUnlockClick() {
+  if (state.adminAuthenticated) return;
+  ownerClickCount += 1;
+  clearTimeout(ownerClickTimer);
+  if (ownerClickCount >= OWNER_CLICKS_REQUIRED) {
+    ownerClickCount = 0;
+    promptAdminPassword();
+    return;
+  }
+  ownerClickTimer = setTimeout(() => {
+    ownerClickCount = 0;
+  }, OWNER_CLICK_WINDOW_MS);
+}
+
+/* ---------- Render the static UI (panels, footer) ---------- */
+function renderShadePanels() {
+  // Right panel powder list
+  dom.powderList.innerHTML = '';
+  SHADES.forEach((shade) => {
+    const displayHex = shade.hex;
+    const opacityLabel = state.adminAuthenticated ? ` · ${getShadeOpacityPercent(shade)}%` : '';
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'powder-swatch-btn';
+    if (state.adminAuthenticated) {
+      btn.classList.add('powder-swatch-btn--admin-editable');
+      if (state.shadesLocked && !canEditShade(shade.id)) btn.classList.add('powder-swatch-btn--locked');
+    }
+    btn.dataset.shadeId = shade.id;
+    btn.innerHTML = `
+      <span class="powder-swatch-pan">
+        <span class="powder-swatch-fill" style="background-color:${displayHex}"></span>
+      </span>
+      <span class="powder-label">${shade.id}</span>
+      <span class="powder-hex">${displayHex.toLowerCase()}${opacityLabel}</span>
+    `;
+    btn.addEventListener('click', () => {
+      if (state.adminAuthenticated && canEditShade(shade.id)) {
+        openShadeEditor(shade.id);
+        return;
+      }
+      if (!state.imageSrc) return;
+      selectShade(shade.id);
+    });
+    dom.powderList.appendChild(btn);
+  });
+
+  // Bottom shade selector jars
+  dom.shadeGrid.innerHTML = '';
+  SHADES.forEach((shade) => {
+    const item = document.createElement('div');
+    item.className = 'shade-jar-item';
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'shade-jar';
+    btn.dataset.shadeId = shade.id;
+    btn.innerHTML = `
+      <span class="jar-img-wrap">
+        <img class="jar-img" src="${shade.image}" alt="${shade.name} foundation jar" draggable="false" />
+        <span class="jar-badge">${shade.id}</span>
+      </span>
+      <span class="jar-info">
+        <span class="jar-name">${shade.name}</span>
+        <span class="jar-desc">${shade.descriptor}</span>
+        <span class="jar-undertone">${shade.undertone}</span>
+        <span class="jar-match">${shade.match}%</span>
+      </span>
+    `;
+    btn.style.display = 'flex';
+    btn.addEventListener('click', () => {
+      if (!state.imageSrc) return;
+      selectShade(shade.id);
+    });
+
+    const buyLink = document.createElement('a');
+    buyLink.className = 'buy-now-btn';
+    buyLink.href = shade.buy;
+    buyLink.target = '_blank';
+    buyLink.rel = 'noopener noreferrer';
+    buyLink.textContent = 'Buy Now';
+
+    item.appendChild(btn);
+    item.appendChild(buyLink);
+    dom.shadeGrid.appendChild(item);
+  });
+
+  // Footer
+  dom.appFooter.innerHTML =
+    '<div class="footer-badges">' +
+    BADGES.map((b) => `<div class="footer-badge"><span class="icon" aria-hidden="true">${b.icon}</span><span>${b.label}</span></div>`).join('') +
+    '</div>';
+}
+
+function syncShadeSelectionUI() {
+  const hasImage = Boolean(state.imageSrc);
+  dom.powderList.querySelectorAll('.powder-swatch-btn').forEach((btn) => {
+    const id = parseShadeId(btn.dataset.shadeId);
+    btn.disabled = !hasImage && !(state.adminAuthenticated && canEditShade(id));
+    const pan = btn.querySelector('.powder-swatch-pan');
+    pan.classList.toggle('powder-swatch-pan--active', id === state.activeShadeId);
+    if (state.adminAuthenticated) {
+      btn.classList.toggle('powder-swatch-btn--locked', state.shadesLocked && !canEditShade(id));
+    }
+  });
+  dom.shadeGrid.querySelectorAll('.shade-jar').forEach((btn) => {
+    const id = parseShadeId(btn.dataset.shadeId);
+    btn.disabled = !hasImage;
+    btn.classList.toggle('active', id === state.activeShadeId);
+  });
+  dom.selectorHint.textContent = hasImage
+    ? 'Click a shade to select the brush · click again to unselect · use Erase to remove makeup'
+    : 'Upload your photo first, then select a shade to paint';
+}
+
+/* ---------- View switching ---------- */
+function renderView() {
+  const hasImage = Boolean(state.imageSrc);
+
+  dom.uploadDropzone.hidden = hasImage || state.showCamera;
+  dom.cameraPanel.hidden = hasImage || !state.showCamera;
+  dom.photoStage.hidden = !hasImage;
+
+  dom.loadingRow.hidden = !state.isLoading;
+  dom.errorBox.hidden = !state.error;
+  if (state.error) dom.errorBox.textContent = state.error;
+
+  // Re-analyze / try again
+  if (hasImage && !state.isLoading && (state.error || state.analyzed)) {
+    dom.reanalyzeBtn.hidden = false;
+    if (state.analyzed) {
+      dom.reanalyzeBtn.textContent = 'Re-analyze face';
+      dom.reanalyzeBtn.className = 'reanalyze-btn as-link';
+    } else {
+      dom.reanalyzeBtn.textContent = 'Try again';
+      dom.reanalyzeBtn.className = 'reanalyze-btn as-primary';
+    }
+  } else {
+    dom.reanalyzeBtn.hidden = true;
+  }
+
+  // Tool controls / status text
+  const brushActive = isBrushActive();
+  const eraseActive = isEraseActive();
+  const swatchMove = isSwatchMoveActive();
+
+  dom.eraseBtn.textContent = state.eraseMode ? 'Erasing…' : 'Erase';
+  dom.eraseBtn.classList.toggle('active', state.eraseMode);
+  dom.clearMakeupBtn.hidden = !state.hasPaint;
+
+  dom.brushStatus.hidden = !brushActive;
+  if (brushActive) {
+    const s = getActiveShade();
+    dom.brushStatus.textContent = `Painting ${s.name} (${s.hex} · ${getShadeOpacityPercent(s)}% transparent) — drag on skin for natural makeup`;
+  }
+  dom.eraseStatus.hidden = !eraseActive;
+  dom.moveStatus.hidden = !(state.analyzed && swatchMove);
+  dom.resetSwatchBtn.hidden = !(swatchMove && Object.keys(state.swatchOffsets).length > 0);
+
+  // cursor state on frame
+  dom.paintArea.classList.toggle('cursor-grabbing', Boolean(state.draggingSwatchId));
+  dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
+  dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
+
+  syncTouchLock();
+  syncScrollKnob();
+
+  syncShadeSelectionUI();
+}
+
+/* ---------- Shade selection ---------- */
+function selectShade(id) {
+  state.activeShadeId = state.activeShadeId === id ? null : id;
+  if (state.activeShadeId != null) state.eraseMode = false;
+  if (state.imageSrc && getActiveShade()) {
+    setupCanvases();
+    refreshPaintDisplay();
+  }
+  syncShadeSelectionUI();
+  renderView();
+}
+
+function activateShade(id) {
+  state.activeShadeId = id;
+}
+
+/* ---------- Image selection ---------- */
+function handleImageSelect(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  resetDetection();
+  state.activeShadeId = null;
+  state.error = null;
+  state.analyzed = false;
+  state.cheekRegions = null;
+  state.swatchOffsets = {};
+  state.hoveredSwatchId = null;
+  state.draggingSwatchId = null;
+  paintLayer = null;
+  paintedShadeHex = null;
+  lastPoint = null;
+  state.hasPaint = false;
+  detectStarted = false;
+  detectAttempts = 0;
+
+  const url = URL.createObjectURL(file);
+  state.imageSrc = url;
+  dom.faceImage.src = url;
+  renderView();
+}
+
+function clearImage() {
+  resetDetection();
+  state.imageSrc = null;
+  state.activeShadeId = null;
+  state.analyzed = false;
+  state.cheekRegions = null;
+  state.error = null;
+  paintLayer = null;
+  paintedShadeHex = null;
+  state.hasPaint = false;
+  dom.faceImage.removeAttribute('src');
+  renderView();
+}
+
+function resetDetection() {
+  state.error = null;
+  state.cheekRegions = null;
+  state.analyzed = false;
+  state.isLoading = false;
+}
+
+/* ---------- Face detection trigger ---------- */
+async function detectFace(imageElement) {
+  state.isLoading = true;
+  state.error = null;
+  state.cheekRegions = null;
+  state.analyzed = false;
+  renderView();
+
+  try {
+    await loadModels();
+    const { canvas, width, height } = createDetectionCanvas(imageElement);
+    const detection = await faceapi
+      .detectSingleFace(canvas, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks();
+
+    if (!detection) {
+      state.error = "We couldn't detect a face. Try a well-lit, front-facing photo.";
+      state.isLoading = false;
+      renderView();
+      return null;
+    }
+
+    const regions = getCheekRegions(detection.landmarks, width, height);
+    state.cheekRegions = regions;
+    state.analyzed = true;
+    state.isLoading = false;
+    state.swatchOffsets = {};
+    state.hoveredSwatchId = null;
+    state.draggingSwatchId = null;
+    renderView();
+    return regions;
+  } catch (err) {
+    state.error = "We couldn't detect a face. Try a well-lit, front-facing photo.";
+    state.isLoading = false;
+    renderView();
+    return null;
+  }
+}
+
+async function runFaceDetection() {
+  const img = dom.faceImage;
+  if (!img.complete || !img.naturalWidth || state.isLoading) return;
+  if (!img.clientWidth || !img.clientHeight) {
+    if (detectAttempts < 40) {
+      detectAttempts += 1;
+      requestAnimationFrame(runFaceDetection);
+    }
+    return;
+  }
+  detectAttempts = 0;
+  detectStarted = true;
+  await detectFace(img);
+}
+
+/* ---------- Canvas setup ---------- */
+function getDisplaySize() {
+  const img = dom.faceImage;
+  if (!img || !img.complete) return null;
+  return { w: img.clientWidth, h: img.clientHeight };
+}
+
+function prepareLayerContext(layer, ratio) {
+  const ctx = layer.getContext('2d');
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  return ctx;
+}
+
+function setupCanvases() {
+  const img = dom.faceImage;
+  if (!img || !img.complete || !img.clientWidth) return null;
+
+  dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = img.clientWidth;
+  const h = img.clientHeight;
+  const bw = Math.round(w * dpr);
+  const bh = Math.round(h * dpr);
+  const sizeChanged = canvasSize.w !== w || canvasSize.h !== h;
+  canvasSize = { w, h };
+
+  if (dom.paintCanvas.width !== bw || dom.paintCanvas.height !== bh) {
+    dom.paintCanvas.width = bw;
+    dom.paintCanvas.height = bh;
+  }
+  if (dom.overlayCanvas.width !== bw || dom.overlayCanvas.height !== bh) {
+    dom.overlayCanvas.width = bw;
+    dom.overlayCanvas.height = bh;
+  }
+
+  if (!paintLayer || sizeChanged) {
+    const oldLayer = paintLayer;
+    const layer = document.createElement('canvas');
+    layer.width = bw;
+    layer.height = bh;
+    const layerCtx = prepareLayerContext(layer, dpr);
+    if (oldLayer && oldLayer.width > 0 && oldLayer.height > 0) {
+      layerCtx.drawImage(oldLayer, 0, 0, oldLayer.width, oldLayer.height, 0, 0, w, h);
+    } else if (!oldLayer) {
+      state.hasPaint = false;
+    }
+    paintLayer = layer;
+  }
+  return { w, h, dpr };
+}
+
+function refreshPaintDisplay() {
+  const size = getDisplaySize();
+  if (!dom.paintCanvas || !size) return;
+  const { w, h } = size;
+  const ctx = dom.paintCanvas.getContext('2d');
+  const activeShade = getActiveShade();
+  const shadeHex = activeShade ? activeShade.hex : paintedShadeHex;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, dom.paintCanvas.width, dom.paintCanvas.height);
+  if (!paintLayer) return;
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalAlpha = shadeHex ? getMakeupDisplayOpacity(shadeHex) : BRUSH_DISPLAY_OPACITY;
+  ctx.drawImage(paintLayer, 0, 0, w, h);
+  ctx.globalAlpha = 1;
+}
+
+/* ---------- Overlay rendering ---------- */
+function getOverlayScale() {
+  const img = dom.faceImage;
+  if (!img || !img.complete || !state.cheekRegions) return null;
+  const displayWidth = img.clientWidth;
+  const displayHeight = img.clientHeight;
+  if (!displayWidth || !displayHeight) return null;
+  const scaleX = displayWidth / state.cheekRegions.imageWidth;
+  const scaleY = displayHeight / state.cheekRegions.imageHeight;
+  return { scaleX, scaleY };
+}
+
+function getAllSwatchPlacements() {
+  const layout = getOverlayScale();
+  if (!layout || !state.analyzed || !state.cheekRegions?.swatchAnchors) return [];
+  const { scaleX, scaleY } = layout;
+  const { swatchAnchors, barWidth } = state.cheekRegions;
+  return [
+    ...computeAnchoredSwatchPlacements(swatchAnchors, barWidth, leftShades, scaleX, scaleY, state.swatchOffsets, state.activeShadeId),
+    ...computeAnchoredSwatchPlacements(swatchAnchors, barWidth, rightShades, scaleX, scaleY, state.swatchOffsets, state.activeShadeId),
+  ];
+}
+
+function renderOverlay() {
+  const overlay = dom.overlayCanvas;
+  const img = dom.faceImage;
+  if (!overlay || !img || !img.complete) return;
+
+  const ratio = dpr || Math.min(window.devicePixelRatio || 1, 2);
+  const displayWidth = img.clientWidth;
+  const displayHeight = img.clientHeight;
+  if (!displayWidth || !displayHeight) return;
+  const bw = Math.round(displayWidth * ratio);
+  const bh = Math.round(displayHeight * ratio);
+  if (overlay.width !== bw || overlay.height !== bh) {
+    overlay.width = bw;
+    overlay.height = bh;
+  }
+
+  const ctx = overlay.getContext('2d');
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.clearRect(0, 0, displayWidth, displayHeight);
+
+  if (state.cheekRegions && state.analyzed && state.cheekRegions.swatchAnchors) {
+    const layout = getOverlayScale();
+    if (!layout) return;
+    const { scaleX, scaleY } = layout;
+    const { swatchAnchors, barWidth } = state.cheekRegions;
+    const hl = highlightSwatchId();
+    const left = computeAnchoredSwatchPlacements(swatchAnchors, barWidth, leftShades, scaleX, scaleY, state.swatchOffsets, state.activeShadeId);
+    const right = computeAnchoredSwatchPlacements(swatchAnchors, barWidth, rightShades, scaleX, scaleY, state.swatchOffsets, state.activeShadeId);
+    drawSwatchPlacements(ctx, left, hl);
+    drawSwatchPlacements(ctx, right, hl);
+  }
+}
+
+function startRenderLoop() {
+  cancelRenderLoop();
+  const animate = () => {
+    renderOverlay();
+    animFrame = requestAnimationFrame(animate);
+  };
+  animFrame = requestAnimationFrame(animate);
+}
+function cancelRenderLoop() {
+  if (animFrame) cancelAnimationFrame(animFrame);
+  animFrame = null;
+}
+
+/* ---------- Painting interaction ---------- */
+function getLocalCoords(e) {
+  const rect = dom.paintArea.getBoundingClientRect();
+  const clientX = e.clientX ?? e.touches?.[0]?.clientX;
+  const clientY = e.clientY ?? e.touches?.[0]?.clientY;
+  if (clientX == null || clientY == null) return null;
+  return { x: clientX - rect.left, y: clientY - rect.top };
+}
+
+function applyPaintAt(x, y, isNewStroke) {
+  const activeShade = getActiveShade();
+  if (!activeShade || !paintLayer) return;
+  const layerCtx = paintLayer.getContext('2d');
+  const prev = isNewStroke ? null : lastPoint;
+  const paintHex = activeShade.hex;
+  const paintOpacity = getShadeOpacity(activeShade);
+  paintStroke(layerCtx, x, y, prev?.x ?? null, prev?.y ?? null, paintHex, paintOpacity);
+  lastPoint = { x, y };
+  paintedShadeHex = paintHex;
+  state.hasPaint = true;
+  setupCanvases();
+  refreshPaintDisplay();
+  dom.clearMakeupBtn.hidden = false;
+}
+
+function applyEraseAt(x, y, isNewStroke) {
+  if (!paintLayer) return;
+  const layerCtx = paintLayer.getContext('2d');
+  const prev = isNewStroke ? null : lastPoint;
+  eraseStroke(layerCtx, x, y, prev?.x ?? null, prev?.y ?? null);
+  lastPoint = { x, y };
+  setupCanvases();
+  refreshPaintDisplay();
+}
+
+function checkHasPaint() {
+  if (!paintLayer) {
+    state.hasPaint = false;
+    renderView();
+    return;
+  }
+  const pixels = paintLayer.getContext('2d').getImageData(0, 0, paintLayer.width, paintLayer.height).data;
+  let found = false;
+  for (let i = 3; i < pixels.length; i += 4) {
+    if (pixels[i] > 0) {
+      found = true;
+      break;
+    }
+  }
+  state.hasPaint = found;
+  renderView();
+}
+
+function updateBrushCursor(coords) {
+  if (isBrushActive() && coords) {
+    dom.brushCursor.hidden = false;
+    syncBrushSizeUI();
+    const w = dom.brushCursor.offsetWidth || getBrushCursorWidth();
+    const h = dom.brushCursor.offsetHeight || w;
+    dom.brushCursor.style.left = `${coords.x - w * 0.5}px`;
+    dom.brushCursor.style.top = `${coords.y - h * 0.06}px`;
+  } else {
+    dom.brushCursor.hidden = true;
+  }
+  if (isEraseActive() && coords) {
+    const eraseSize = getEraseSize();
+    dom.eraseCursor.hidden = false;
+    dom.eraseCursor.style.left = `${coords.x - eraseSize / 2}px`;
+    dom.eraseCursor.style.top = `${coords.y - eraseSize / 2}px`;
+    dom.eraseCursor.style.width = `${eraseSize}px`;
+    dom.eraseCursor.style.height = `${eraseSize}px`;
+  } else {
+    dom.eraseCursor.hidden = true;
+  }
+}
+
+function onPointerDown(e) {
+  const coords = getLocalCoords(e);
+  if (!coords) return;
+
+  if (isToolActive()) {
+    if (isMobileTouch(e)) {
+      pendingTouch = { pointerId: e.pointerId, type: 'paint', startX: coords.x, startY: coords.y };
+      return;
+    }
+    startPainting(e, coords);
+    return;
+  }
+
+  if (isSwatchMoveActive()) {
+    const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
+    if (hitId != null) {
+      if (isMobileTouch(e)) {
+        pendingTouch = { pointerId: e.pointerId, type: 'swatch', hitId, startX: coords.x, startY: coords.y };
+        return;
+      }
+      startSwatchDrag(e, hitId, coords);
+    }
+  }
+}
+
+function onPointerMove(e) {
+  const coords = getLocalCoords(e);
+  if (!coords) return;
+
+  if (pendingTouch && pendingTouch.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
+    const dx = Math.abs(coords.x - pendingTouch.startX);
+    const dy = Math.abs(coords.y - pendingTouch.startY);
+    if (dy > MOBILE_SCROLL_THRESHOLD && dy >= dx) {
+      pendingTouch = null;
+      return;
+    }
+    if (Math.hypot(dx, dy) >= MOBILE_PAINT_THRESHOLD) {
+      const touch = pendingTouch;
+      pendingTouch = null;
+      if (touch.type === 'paint' && isToolActive()) startPainting(e, coords);
+      else if (touch.type === 'swatch') startSwatchDrag(e, touch.hitId, coords);
+    }
+    return;
+  }
+
+  if (draggingSwatch) {
+    e.preventDefault();
+    const { shadeId, originX, originY, pointerX, pointerY } = draggingSwatch;
+    state.swatchOffsets = {
+      ...state.swatchOffsets,
+      [shadeId]: { x: originX + (coords.x - pointerX), y: originY + (coords.y - pointerY) },
+    };
+    return;
+  }
+
+  if (isSwatchMoveActive()) {
+    const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
+    if (hitId !== state.hoveredSwatchId) {
+      state.hoveredSwatchId = hitId;
+      renderView();
+    }
+  }
+
+  if (isToolActive()) updateBrushCursor(coords);
+
+  if (!isPainting || !isToolActive()) return;
+  e.preventDefault();
+  if (isEraseActive()) applyEraseAt(coords.x, coords.y, false);
+  else applyPaintAt(coords.x, coords.y, false);
+}
+
+function onPointerUp(e) {
+  const coords = getLocalCoords(e);
+  if (pendingTouch && pendingTouch.pointerId === e.pointerId) {
+    const touch = pendingTouch;
+    pendingTouch = null;
+    if (coords && touch.type === 'paint' && isToolActive()) {
+      const dist = Math.hypot(coords.x - touch.startX, coords.y - touch.startY);
+      if (dist < MOBILE_PAINT_THRESHOLD) startPainting(e, coords);
+    }
+  }
+
+  const wasErasing = isPainting && state.eraseMode;
+  isPainting = false;
+  lastPoint = null;
+  draggingSwatch = null;
+  if (state.draggingSwatchId != null) {
+    state.draggingSwatchId = null;
+    renderView();
+  }
+  if (dom.paintArea.hasPointerCapture?.(e.pointerId)) {
+    dom.paintArea.releasePointerCapture(e.pointerId);
+  }
+  syncTouchLock();
+  if (wasErasing) checkHasPaint();
+}
+
+function onPointerEnter(e) {
+  if (!isToolActive()) return;
+  const coords = getLocalCoords(e);
+  if (coords) updateBrushCursor(coords);
+}
+
+function onPointerLeave() {
+  updateBrushCursor(null);
+  pendingTouch = null;
+  if (!draggingSwatch) {
+    if (state.hoveredSwatchId != null) {
+      state.hoveredSwatchId = null;
+      renderView();
+    }
+    isPainting = false;
+    lastPoint = null;
+    syncTouchLock();
+  }
+}
+
+/* ---------- Arrow-key nudging ---------- */
+function moveSwatchBy(shadeId, dx, dy) {
+  const current = state.swatchOffsets[shadeId] ?? { x: 0, y: 0 };
+  state.swatchOffsets = { ...state.swatchOffsets, [shadeId]: { x: current.x + dx, y: current.y + dy } };
+}
+
+window.addEventListener('keydown', (e) => {
+  if (!isSwatchMoveActive()) return;
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  const targetId = state.draggingSwatchId ?? state.hoveredSwatchId;
+  if (targetId == null) return;
+
+  let dx = 0;
+  let dy = 0;
+  const step = e.shiftKey ? SWATCH_MOVE_STEP_LARGE_PX : SWATCH_MOVE_STEP_PX;
+  switch (e.key) {
+    case 'ArrowLeft': dx = -step; break;
+    case 'ArrowRight': dx = step; break;
+    case 'ArrowUp': dy = -step; break;
+    case 'ArrowDown': dy = step; break;
+    default: return;
+  }
+  e.preventDefault();
+  moveSwatchBy(targetId, dx, dy);
+});
+
+/* ---------- Clear makeup ---------- */
+function clearMakeup() {
+  const size = getDisplaySize();
+  if (paintLayer && size) {
+    const ctx = prepareLayerContext(paintLayer, dpr);
+    ctx.clearRect(0, 0, size.w, size.h);
+  }
+  paintedShadeHex = null;
+  state.hasPaint = false;
+  refreshPaintDisplay();
+  renderView();
+}
+
+/* ---------- Camera ---------- */
+async function startCamera() {
+  state.error = null;
+  dom.cameraError.hidden = true;
+  if (!navigator.mediaDevices?.getUserMedia) {
+    dom.cameraError.hidden = false;
+    dom.cameraError.textContent = 'Camera is not supported on this device. Please upload a photo instead.';
+    return;
+  }
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false,
+    });
+    state.showCamera = true;
+    renderView();
+    dom.cameraVideo.srcObject = stream;
+  } catch {
+    dom.cameraError.hidden = false;
+    dom.cameraError.textContent = 'Could not access camera. Allow camera permission or upload a photo.';
+  }
+}
+
+function stopCamera() {
+  if (stream) {
+    stream.getTracks().forEach((t) => t.stop());
+    stream = null;
+  }
+  dom.cameraVideo.srcObject = null;
+  state.showCamera = false;
+  renderView();
+}
+
+function capturePhoto() {
+  const video = dom.cameraVideo;
+  if (!video || !video.videoWidth) return;
+  const canvas = document.createElement('canvas');
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  canvas.getContext('2d').drawImage(video, 0, 0);
+  canvas.toBlob(
+    (blob) => {
+      if (!blob) return;
+      const file = new File([blob], 'camera-photo.jpg', { type: 'image/jpeg' });
+      stopCamera();
+      handleImageSelect(file);
+    },
+    'image/jpeg',
+    0.92
+  );
+}
+
+/* ---------- Event wiring ---------- */
+function wireEvents() {
+  dom.fileInput.addEventListener('change', (e) => {
+    handleImageSelect(e.target.files[0]);
+    e.target.value = '';
+  });
+
+  dom.takePhotoBtn.addEventListener('click', startCamera);
+  dom.captureBtn.addEventListener('click', capturePhoto);
+  dom.cancelCameraBtn.addEventListener('click', stopCamera);
+
+  // drag & drop
+  dom.uploadDropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dom.uploadDropzone.classList.add('drag-over');
+  });
+  dom.uploadDropzone.addEventListener('dragleave', () => dom.uploadDropzone.classList.remove('drag-over'));
+  dom.uploadDropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dom.uploadDropzone.classList.remove('drag-over');
+    handleImageSelect(e.dataTransfer.files[0]);
+  });
+
+  dom.clearImageBtn.addEventListener('click', clearImage);
+  dom.clearMakeupBtn.addEventListener('click', clearMakeup);
+
+  dom.eraseBtn.addEventListener('click', () => {
+    state.eraseMode = !state.eraseMode;
+    renderView();
+  });
+
+  dom.resetSwatchBtn.addEventListener('click', () => {
+    state.swatchOffsets = {};
+    renderView();
+  });
+
+  dom.reanalyzeBtn.addEventListener('click', () => {
+    detectStarted = false;
+    runFaceDetection();
+  });
+
+  // paint area pointer events
+  dom.paintArea.addEventListener('pointerdown', onPointerDown);
+  dom.paintArea.addEventListener('pointermove', onPointerMove);
+  dom.paintArea.addEventListener('pointerup', onPointerUp);
+  dom.paintArea.addEventListener('pointerenter', onPointerEnter);
+  dom.paintArea.addEventListener('pointerleave', onPointerLeave);
+  dom.paintArea.addEventListener('pointercancel', onPointerUp);
+
+  // image load → setup + auto detect
+  dom.faceImage.addEventListener('load', () => {
+    setupCanvases();
+    refreshPaintDisplay();
+    renderOverlay();
+    startRenderLoop();
+    if (!detectStarted && !state.analyzed && !state.isLoading) {
+      runFaceDetection();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (!state.imageSrc) return;
+    setupCanvases();
+    refreshPaintDisplay();
+    renderOverlay();
+  });
+
+  dom.brushSizeSlider.addEventListener('input', (e) => {
+    setBrushSize(Number(e.target.value));
+  });
+
+  dom.brushSizeDown.addEventListener('click', () => nudgeBrushSize(-BRUSH_SIZE_STEP));
+  dom.brushSizeUp.addEventListener('click', () => nudgeBrushSize(BRUSH_SIZE_STEP));
+  dom.brushSizeDownInline.addEventListener('click', () => nudgeBrushSize(-BRUSH_SIZE_STEP));
+  dom.brushSizeUpInline.addEventListener('click', () => nudgeBrushSize(BRUSH_SIZE_STEP));
+
+  dom.spreadSizeSlider.addEventListener('input', (e) => {
+    spreadFactor = Number(e.target.value);
+  });
+
+  dom.ownerUnlockTarget.addEventListener('click', handleOwnerUnlockClick);
+
+  dom.adminPasswordSubmit.addEventListener('click', verifyAdminPassword);
+  dom.adminPasswordCancel.addEventListener('click', hidePasswordModal);
+  dom.adminPasswordChangeBtn.addEventListener('click', promptChangePassword);
+  dom.adminPasswordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyAdminPassword();
+  });
+
+  dom.adminChangeOldNext.addEventListener('click', verifyOldPasswordForChange);
+  dom.adminChangeOldBack.addEventListener('click', () => {
+    clearPasswordModalFields();
+    showPasswordPanel('unlock');
+    dom.adminPasswordInput.focus();
+  });
+  dom.adminChangeOldCancel.addEventListener('click', hidePasswordModal);
+  dom.adminOldPasswordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') verifyOldPasswordForChange();
+  });
+
+  dom.adminChangeSave.addEventListener('click', saveNewAdminPassword);
+  dom.adminChangeNewBack.addEventListener('click', () => {
+    dom.adminNewPasswordInput.value = '';
+    dom.adminConfirmPasswordInput.value = '';
+    dom.adminChangeNewError.hidden = true;
+    showPasswordPanel('change-old');
+    dom.adminOldPasswordInput.focus();
+  });
+  dom.adminChangeNewCancel.addEventListener('click', hidePasswordModal);
+  dom.adminConfirmPasswordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') saveNewAdminPassword();
+  });
+
+  dom.adminSaveBtn.addEventListener('click', saveAdminShades);
+  dom.adminChangePwdBtn.addEventListener('click', promptChangePassword);
+  dom.adminCloseBtn.addEventListener('click', closeAdminMode);
+
+  dom.shadeEditorApply.addEventListener('click', applyShadeEditor);
+  dom.shadeEditorCancel.addEventListener('click', closeShadeEditor);
+
+  dom.shadeEditorHex.addEventListener('input', () => {
+    const norm = normalizeHex(dom.shadeEditorHex.value);
+    if (norm) {
+      dom.shadeEditorPicker.value = norm;
+      updateShadeEditorPreview(norm, Number(dom.shadeEditorDarkness.value));
+    }
+  });
+
+  dom.shadeEditorPicker.addEventListener('input', () => {
+    dom.shadeEditorHex.value = dom.shadeEditorPicker.value.toUpperCase();
+    updateShadeEditorPreview(dom.shadeEditorPicker.value, Number(dom.shadeEditorDarkness.value));
+  });
+
+  dom.shadeEditorDarkness.addEventListener('input', () => {
+    const hex = normalizeHex(dom.shadeEditorHex.value) ?? dom.shadeEditorPicker.value;
+    updateShadeEditorPreview(hex, Number(dom.shadeEditorDarkness.value));
+  });
+
+  window.addEventListener('scroll', () => updateScrollKnobPosition(), { passive: true });
+  window.addEventListener('resize', () => syncScrollKnob());
+
+  dom.mobileScrollKnob?.addEventListener('pointerdown', (e) => {
+    scrollKnobDrag = { startY: e.clientY, startScroll: window.scrollY };
+    dom.mobileScrollKnob.classList.add('is-dragging');
+    dom.mobileScrollKnob.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  });
+  dom.mobileScrollKnob?.addEventListener('pointermove', (e) => {
+    if (!scrollKnobDrag) return;
+    const travel = Math.max(1, window.innerHeight - SCROLL_KNOB_SIZE - SCROLL_KNOB_MARGIN * 2);
+    const { maxScroll } = getScrollMetrics();
+    const dy = e.clientY - scrollKnobDrag.startY;
+    scrollKnobDrag.startY = e.clientY;
+    window.scrollBy(0, (dy / travel) * maxScroll);
+    e.preventDefault();
+  });
+  const endScrollKnobDrag = (e) => {
+    scrollKnobDrag = null;
+    dom.mobileScrollKnob?.classList.remove('is-dragging');
+    if (dom.mobileScrollKnob?.hasPointerCapture?.(e.pointerId)) {
+      dom.mobileScrollKnob.releasePointerCapture(e.pointerId);
+    }
+  };
+  dom.mobileScrollKnob?.addEventListener('pointerup', endScrollKnobDrag);
+  dom.mobileScrollKnob?.addEventListener('pointercancel', endScrollKnobDrag);
+}
+
+/* ---------- Init ---------- */
+initAdminMode();
+syncBrushSizeUI();
+syncScrollKnob();
+renderShadePanels();
+wireEvents();
+renderView();
+
+  </script>
+  </body>
+</html>
