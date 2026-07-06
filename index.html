@@ -282,11 +282,6 @@ body {
   }
 }
 
-.face-frame.face-frame--edit-active {
-  border-color: var(--accent-gold);
-  box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.35), 0 14px 36px rgba(45, 31, 22, 0.14);
-}
-
 @media (max-width: 768px) {
   .face-frame {
     max-height: min(52vh, 22rem);
@@ -297,69 +292,6 @@ body {
     width: 100%;
     object-fit: contain;
     background: #efe5d8;
-  }
-}
-
-.mobile-scroll-shield {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  touch-action: pan-y;
-  background: transparent;
-  cursor: default;
-}
-
-.mobile-mode-bar {
-  display: none;
-  width: 100%;
-  max-width: 28rem;
-  margin: 0 auto;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.45rem;
-}
-
-.mobile-mode-toggle {
-  display: flex;
-  padding: 0.28rem;
-  gap: 0.28rem;
-  border-radius: 999px;
-  background: rgba(255, 252, 248, 0.96);
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  box-shadow: 0 4px 14px rgba(45, 31, 22, 0.08);
-}
-
-.mobile-mode-btn {
-  flex: 1;
-  border: none;
-  border-radius: 999px;
-  padding: 0.55rem 0.75rem;
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: rgba(44, 26, 14, 0.72);
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.mobile-mode-btn.active {
-  background: var(--text-primary);
-  color: var(--card-bg);
-}
-
-.mobile-mode-caption {
-  margin: 0;
-  font-size: 0.68rem;
-  line-height: 1.35;
-  text-align: center;
-  color: rgba(44, 26, 14, 0.48);
-}
-
-@media (max-width: 768px) {
-  .mobile-mode-bar {
-    display: flex;
   }
 }
 
@@ -763,6 +695,28 @@ body {
 
 .jar-img-wrap {
   position: relative;
+}
+
+.jar-color-chip {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.1rem;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 5px rgba(44, 26, 14, 0.22);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.jar-hex {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: rgba(44, 26, 14, 0.55);
+  margin-top: 0.2rem;
+  text-align: center;
 }
 
 .jar-img {
@@ -1397,13 +1351,6 @@ body {
 
               <!-- Photo + canvases (shown when image loaded) -->
               <div class="photo-stage" id="photoStage" hidden>
-                <div class="mobile-mode-bar" id="mobileModeBar" hidden>
-                  <div class="mobile-mode-toggle" role="tablist" aria-label="Photo interaction mode">
-                    <button type="button" class="mobile-mode-btn active" id="mobileScrollModeBtn" role="tab" aria-selected="true">Scroll</button>
-                    <button type="button" class="mobile-mode-btn" id="mobileEditModeBtn" role="tab" aria-selected="false">Edit photo</button>
-                  </div>
-                  <p class="mobile-mode-caption" id="mobileModeCaption">Scroll freely to pick shades below · switch to Edit photo to paint or move swatches</p>
-                </div>
                 <div class="face-frame" id="paintArea">
                   <img id="faceImage" alt="Face for skin analysis" draggable="false" />
                   <canvas id="paintCanvas" class="layer makeup-paint-layer"></canvas>
@@ -1411,7 +1358,6 @@ body {
                   <img id="brushCursor" class="brush-cursor" src="{{ 'brush.png' | asset_url }}" alt="" draggable="false" hidden />
                   <!-- <img id="brushCursor" class="brush-cursor" src="assets/brush.png" alt="" draggable="false" hidden /> -->
                   <div id="eraseCursor" class="erase-cursor" hidden></div>
-                  <div class="mobile-scroll-shield" id="mobileScrollShield" hidden aria-hidden="true"></div>
                 </div>
 
                 <div class="photo-controls">
@@ -1608,7 +1554,14 @@ const BADGES = [
 ];
 
 function getShadeById(id) {
-  return SHADES.find((s) => s.id === id) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
+  if (id == null) return SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
+  const parsed = parseShadeId(String(id));
+  return SHADES.find((s) => s.id === parsed || String(s.id) === String(id)) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
+}
+
+function shadeIdsEqual(a, b) {
+  if (a == null || b == null) return false;
+  return parseShadeId(String(a)) === parseShadeId(String(b));
 }
 function getShadesByIds(ids) {
   return ids.map((id) => getShadeById(id));
@@ -1675,7 +1628,7 @@ function loadSavedShades() {
     const saved = JSON.parse(raw);
     if (!Array.isArray(saved)) return;
     saved.forEach((entry) => {
-      const shade = SHADES.find((s) => s.id === entry.id);
+      const shade = SHADES.find((s) => shadeIdsEqual(s.id, entry.id));
       if (!shade) return;
       if (entry.hex) shade.hex = normalizeHex(entry.hex) ?? shade.hex;
       if (typeof entry.opacity === 'number') shade.opacity = entry.opacity;
@@ -2006,11 +1959,6 @@ const dom = {
   shadeGrid: document.getElementById('shadeGrid'),
   selectorHint: document.getElementById('selectorHint'),
   appFooter: document.getElementById('appFooter'),
-  mobileModeBar: document.getElementById('mobileModeBar'),
-  mobileScrollModeBtn: document.getElementById('mobileScrollModeBtn'),
-  mobileEditModeBtn: document.getElementById('mobileEditModeBtn'),
-  mobileModeCaption: document.getElementById('mobileModeCaption'),
-  mobileScrollShield: document.getElementById('mobileScrollShield'),
   brushSizeSlider: document.getElementById('brushSizeSlider'),
   brushSizeValue: document.getElementById('brushSizeValue'),
   brushSizeDown: document.getElementById('brushSizeDown'),
@@ -2072,7 +2020,6 @@ const state = {
   adminAuthenticated: false,
   shadesLocked: Boolean(localStorage.getItem(SHADES_STORAGE_KEY)),
   editingShadeId: null,
-  mobileEditMode: false,
 };
 
 // canvas working refs
@@ -2087,65 +2034,41 @@ let draggingSwatch = null;
 let detectStarted = false;
 let detectAttempts = 0;
 let animFrame = null;
+let pendingTouch = null;
+
+const MOBILE_SCROLL_THRESHOLD = 12;
+const MOBILE_PAINT_THRESHOLD = 8;
 
 function isMobileLayout() {
   return window.matchMedia('(max-width: 768px)').matches;
 }
 
-function canTouchPhotoOnMobile() {
-  return !isMobileLayout() || state.mobileEditMode;
-}
-
-function setMobileEditMode(enabled) {
-  state.mobileEditMode = Boolean(enabled);
-  isPainting = false;
-  lastPoint = null;
-  draggingSwatch = null;
-  if (state.draggingSwatchId != null) {
-    state.draggingSwatchId = null;
-  }
-  updateBrushCursor(null);
-  syncMobilePhotoUI();
-  renderView();
-}
-
-function syncMobilePhotoUI() {
-  const mobile = isMobileLayout();
-  const hasImage = Boolean(state.imageSrc);
-
-  if (dom.mobileModeBar) dom.mobileModeBar.hidden = !(mobile && hasImage);
-  if (dom.mobileScrollShield) dom.mobileScrollShield.hidden = !(mobile && hasImage && !state.mobileEditMode);
-
-  if (dom.mobileScrollModeBtn) {
-    dom.mobileScrollModeBtn.classList.toggle('active', !state.mobileEditMode);
-    dom.mobileScrollModeBtn.setAttribute('aria-selected', String(!state.mobileEditMode));
-  }
-  if (dom.mobileEditModeBtn) {
-    dom.mobileEditModeBtn.classList.toggle('active', state.mobileEditMode);
-    dom.mobileEditModeBtn.setAttribute('aria-selected', String(state.mobileEditMode));
-  }
-
-  dom.paintArea.classList.toggle('face-frame--edit-active', mobile && hasImage && state.mobileEditMode);
-
-  if (dom.mobileModeCaption && mobile && hasImage) {
-    if (!state.mobileEditMode) {
-      dom.mobileModeCaption.textContent = 'Scroll freely to pick shades below · switch to Edit photo to paint or move swatches';
-    } else if (isBrushActive()) {
-      const s = getActiveShade();
-      dom.mobileModeCaption.textContent = `Edit mode — drag on skin to paint ${s.name}`;
-    } else if (isEraseActive()) {
-      dom.mobileModeCaption.textContent = 'Edit mode — drag on skin to erase makeup';
-    } else if (isSwatchMoveActive()) {
-      dom.mobileModeCaption.textContent = 'Edit mode — drag cheek swatches to reposition';
-    } else {
-      dom.mobileModeCaption.textContent = 'Edit mode — select a shade or tap Erase, then drag on the photo';
-    }
-  }
+function isMobileTouch(e) {
+  return isMobileLayout() && e.pointerType === 'touch';
 }
 
 function syncTouchLock() {
   const lockTouch = !isMobileLayout() && (isToolActive() || Boolean(draggingSwatch));
   dom.paintArea.classList.toggle('face-frame--touch-lock', lockTouch);
+}
+
+function startPainting(e, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  isPainting = true;
+  syncTouchLock();
+  if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
+  else applyPaintAt(coords.x, coords.y, true);
+}
+
+function startSwatchDrag(e, hitId, coords) {
+  e.preventDefault();
+  dom.paintArea.setPointerCapture?.(e.pointerId);
+  const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
+  draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
+  state.draggingSwatchId = hitId;
+  syncTouchLock();
+  renderView();
 }
 
 /* ---------- derived helpers ---------- */
@@ -2188,9 +2111,65 @@ function syncAdminBar() {
 }
 
 function updateShadeEditorPreview(hex, opacityPercent) {
+  const norm = normalizeHex(hex) ?? hex;
   const opacity = opacityFromPercent(opacityPercent);
-  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(hex, opacity);
+  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(norm, opacity);
   dom.shadeEditorDarknessValue.textContent = `${Math.round(opacityPercent)}%`;
+  syncEditingShadeDisplay(norm, opacityPercent);
+}
+
+function findShadeUiNodes(shadeId) {
+  const powderBtn = [...dom.powderList.querySelectorAll('.powder-swatch-btn')].find((btn) =>
+    shadeIdsEqual(btn.dataset.shadeId, shadeId)
+  );
+  const jarBtn = [...dom.shadeGrid.querySelectorAll('.shade-jar')].find((btn) =>
+    shadeIdsEqual(btn.dataset.shadeId, shadeId)
+  );
+  return { powderBtn, jarBtn };
+}
+
+function syncEditingShadeDisplay(hex, opacityPercent) {
+  if (state.editingShadeId == null) return;
+  const norm = normalizeHex(hex);
+  if (!norm) return;
+  const { powderBtn, jarBtn } = findShadeUiNodes(state.editingShadeId);
+  if (powderBtn) {
+    const fill = powderBtn.querySelector('.powder-swatch-fill');
+    if (fill) fill.style.backgroundColor = norm;
+    const hexLabel = powderBtn.querySelector('.powder-hex');
+    if (hexLabel) {
+      hexLabel.textContent = state.adminAuthenticated
+        ? `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`
+        : norm.toLowerCase();
+    }
+  }
+  if (jarBtn) {
+    const chip = jarBtn.querySelector('.jar-color-chip');
+    if (chip) chip.style.backgroundColor = norm;
+    const hexLabel = jarBtn.querySelector('.jar-hex');
+    if (hexLabel) hexLabel.textContent = `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`;
+  }
+}
+
+function updateShadeColorInUI(shade) {
+  const opacityPercent = getShadeOpacityPercent(shade);
+  const { powderBtn, jarBtn } = findShadeUiNodes(shade.id);
+  if (powderBtn) {
+    const fill = powderBtn.querySelector('.powder-swatch-fill');
+    if (fill) fill.style.backgroundColor = shade.hex;
+    const hexLabel = powderBtn.querySelector('.powder-hex');
+    if (hexLabel) {
+      hexLabel.textContent = state.adminAuthenticated
+        ? `${shade.hex.toLowerCase()} · ${opacityPercent}%`
+        : shade.hex.toLowerCase();
+    }
+  }
+  if (jarBtn) {
+    const chip = jarBtn.querySelector('.jar-color-chip');
+    if (chip) chip.style.backgroundColor = shade.hex;
+    const hexLabel = jarBtn.querySelector('.jar-hex');
+    if (hexLabel) hexLabel.textContent = `${shade.hex.toLowerCase()} · ${opacityPercent}%`;
+  }
 }
 
 function openShadeEditor(shadeId) {
@@ -2198,7 +2177,7 @@ function openShadeEditor(shadeId) {
   const shade = getShadeById(shadeId);
   if (!shade) return;
   const opacityPercent = getShadeOpacityPercent(shade);
-  state.editingShadeId = shadeId;
+  state.editingShadeId = shade.id;
   dom.shadeEditorTitle.textContent = `Edit shade ${shade.id}`;
   dom.shadeEditorHex.value = shade.hex;
   dom.shadeEditorPicker.value = shade.hex.toLowerCase();
@@ -2223,12 +2202,24 @@ function applyShadeEditor() {
     return;
   }
   const shade = getShadeById(shadeId);
+  if (!shade) return;
   shade.hex = norm;
   shade.opacity = opacityFromPercent(dom.shadeEditorDarkness.value);
   delete shade.darkness;
+
+  saveShadesToStorage();
+  state.shadesLocked = true;
+
+  if (shadeIdsEqual(state.activeShadeId, shade.id)) {
+    paintedShadeHex = norm;
+    setupCanvases();
+    refreshPaintDisplay();
+  }
+
+  updateShadeColorInUI(shade);
   closeShadeEditor();
-  renderShadePanels();
   renderOverlay();
+  syncAdminBar();
   renderView();
 }
 
@@ -2426,6 +2417,7 @@ function renderShadePanels() {
     btn.innerHTML = `
       <span class="jar-img-wrap">
         <img class="jar-img" src="${shade.image}" alt="${shade.name} foundation jar" draggable="false" />
+        <span class="jar-color-chip" style="background-color:${displayHex}"></span>
         <span class="jar-badge">${shade.id}</span>
       </span>
       <span class="jar-info">
@@ -2433,10 +2425,15 @@ function renderShadePanels() {
         <span class="jar-desc">${shade.descriptor}</span>
         <span class="jar-undertone">${shade.undertone}</span>
         <span class="jar-match">${shade.match}%</span>
+        ${state.adminAuthenticated ? `<span class="jar-hex">${displayHex.toLowerCase()} · ${getShadeOpacityPercent(shade)}%</span>` : ''}
       </span>
     `;
     btn.style.display = 'flex';
     btn.addEventListener('click', () => {
+      if (state.adminAuthenticated) {
+        openShadeEditor(shade.id);
+        return;
+      }
       if (!state.imageSrc) return;
       selectShade(shade.id);
     });
@@ -2526,9 +2523,8 @@ function renderView() {
   // cursor state on frame
   dom.paintArea.classList.toggle('cursor-grabbing', Boolean(state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
-  dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId() && canTouchPhotoOnMobile());
+  dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
 
-  syncMobilePhotoUI();
   syncTouchLock();
 
   syncShadeSelectionUI();
@@ -2567,7 +2563,6 @@ function handleImageSelect(file) {
   state.hasPaint = false;
   detectStarted = false;
   detectAttempts = 0;
-  state.mobileEditMode = false;
 
   const url = URL.createObjectURL(file);
   state.imageSrc = url;
@@ -2582,7 +2577,6 @@ function clearImage() {
   state.analyzed = false;
   state.cheekRegions = null;
   state.error = null;
-  state.mobileEditMode = false;
   paintLayer = null;
   paintedShadeHex = null;
   state.hasPaint = false;
@@ -2870,40 +2864,49 @@ function updateBrushCursor(coords) {
 }
 
 function onPointerDown(e) {
-  if (!canTouchPhotoOnMobile()) return;
-
   const coords = getLocalCoords(e);
   if (!coords) return;
 
   if (isToolActive()) {
-    e.preventDefault();
-    dom.paintArea.setPointerCapture?.(e.pointerId);
-    isPainting = true;
-    syncTouchLock();
-    if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
-    else applyPaintAt(coords.x, coords.y, true);
+    if (isMobileTouch(e)) {
+      pendingTouch = { pointerId: e.pointerId, type: 'paint', startX: coords.x, startY: coords.y };
+      return;
+    }
+    startPainting(e, coords);
     return;
   }
 
   if (isSwatchMoveActive()) {
     const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
     if (hitId != null) {
-      e.preventDefault();
-      dom.paintArea.setPointerCapture?.(e.pointerId);
-      const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
-      draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
-      state.draggingSwatchId = hitId;
-      syncTouchLock();
-      renderView();
+      if (isMobileTouch(e)) {
+        pendingTouch = { pointerId: e.pointerId, type: 'swatch', hitId, startX: coords.x, startY: coords.y };
+        return;
+      }
+      startSwatchDrag(e, hitId, coords);
     }
   }
 }
 
 function onPointerMove(e) {
-  if (!canTouchPhotoOnMobile()) return;
-
   const coords = getLocalCoords(e);
   if (!coords) return;
+
+  if (pendingTouch && pendingTouch.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
+    const dx = Math.abs(coords.x - pendingTouch.startX);
+    const dy = Math.abs(coords.y - pendingTouch.startY);
+    if (dy > MOBILE_SCROLL_THRESHOLD && dy > dx) {
+      pendingTouch = null;
+      return;
+    }
+    if (Math.hypot(dx, dy) >= MOBILE_PAINT_THRESHOLD) {
+      const touch = pendingTouch;
+      pendingTouch = null;
+      if (touch.type === 'paint' && isToolActive()) startPainting(e, coords);
+      else if (touch.type === 'swatch') startSwatchDrag(e, touch.hitId, coords);
+    }
+    return;
+  }
 
   if (draggingSwatch) {
     e.preventDefault();
@@ -2932,6 +2935,16 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
+  const coords = getLocalCoords(e);
+  if (pendingTouch && pendingTouch.pointerId === e.pointerId) {
+    const touch = pendingTouch;
+    pendingTouch = null;
+    if (coords && touch.type === 'paint' && isToolActive()) {
+      const dist = Math.hypot(coords.x - touch.startX, coords.y - touch.startY);
+      if (dist < MOBILE_PAINT_THRESHOLD) startPainting(e, coords);
+    }
+  }
+
   const wasErasing = isPainting && state.eraseMode;
   isPainting = false;
   lastPoint = null;
@@ -2948,13 +2961,14 @@ function onPointerUp(e) {
 }
 
 function onPointerEnter(e) {
-  if (!canTouchPhotoOnMobile() || !isToolActive()) return;
+  if (!isToolActive()) return;
   const coords = getLocalCoords(e);
   if (coords) updateBrushCursor(coords);
 }
 
 function onPointerLeave() {
   updateBrushCursor(null);
+  pendingTouch = null;
   if (!draggingSwatch) {
     if (state.hoveredSwatchId != null) {
       state.hoveredSwatchId = null;
@@ -3086,12 +3100,8 @@ function wireEvents() {
 
   dom.eraseBtn.addEventListener('click', () => {
     state.eraseMode = !state.eraseMode;
-    if (isMobileLayout() && state.eraseMode) setMobileEditMode(true);
     renderView();
   });
-
-  dom.mobileScrollModeBtn?.addEventListener('click', () => setMobileEditMode(false));
-  dom.mobileEditModeBtn?.addEventListener('click', () => setMobileEditMode(true));
 
   dom.resetSwatchBtn.addEventListener('click', () => {
     state.swatchOffsets = {};
@@ -3203,11 +3213,6 @@ function wireEvents() {
   dom.shadeEditorDarkness.addEventListener('input', () => {
     const hex = normalizeHex(dom.shadeEditorHex.value) ?? dom.shadeEditorPicker.value;
     updateShadeEditorPreview(hex, Number(dom.shadeEditorDarkness.value));
-  });
-
-  window.addEventListener('resize', () => {
-    syncMobilePhotoUI();
-    syncTouchLock();
   });
 }
 
