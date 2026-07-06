@@ -283,6 +283,11 @@ body {
 }
 
 @media (max-width: 768px) {
+  .photo-stage,
+  .face-canvas-wrap {
+    touch-action: pan-y;
+  }
+
   .face-frame {
     max-height: min(52vh, 22rem);
   }
@@ -2036,8 +2041,8 @@ let detectAttempts = 0;
 let animFrame = null;
 let pendingTouch = null;
 
-const MOBILE_SCROLL_THRESHOLD = 12;
-const MOBILE_PAINT_THRESHOLD = 8;
+const MOBILE_SCROLL_THRESHOLD = 8;
+const MOBILE_PAINT_THRESHOLD = 10;
 
 function isMobileLayout() {
   return window.matchMedia('(max-width: 768px)').matches;
@@ -2045,6 +2050,15 @@ function isMobileLayout() {
 
 function isMobileTouch(e) {
   return isMobileLayout() && e.pointerType === 'touch';
+}
+
+function syncPhotoInteraction() {
+  const interactive = isToolActive() || isSwatchMoveActive();
+  if (isMobileLayout()) {
+    dom.paintArea.style.pointerEvents = interactive ? 'auto' : 'none';
+  } else {
+    dom.paintArea.style.pointerEvents = '';
+  }
 }
 
 function syncTouchLock() {
@@ -2525,6 +2539,7 @@ function renderView() {
   dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
 
+  syncPhotoInteraction();
   syncTouchLock();
 
   syncShadeSelectionUI();
@@ -2895,7 +2910,7 @@ function onPointerMove(e) {
   if (pendingTouch && pendingTouch.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
     const dx = Math.abs(coords.x - pendingTouch.startX);
     const dy = Math.abs(coords.y - pendingTouch.startY);
-    if (dy > MOBILE_SCROLL_THRESHOLD && dy > dx) {
+    if (dy > MOBILE_SCROLL_THRESHOLD && dy >= dx) {
       pendingTouch = null;
       return;
     }
