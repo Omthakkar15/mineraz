@@ -374,6 +374,73 @@ body {
   margin: 0;
 }
 
+/* Mobile scroll rail (phone only) */
+.mobile-scroll-rail {
+  display: none;
+  position: fixed;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+  width: 16px;
+  height: min(42vh, 280px);
+  min-height: 160px;
+  flex-direction: column;
+  align-items: center;
+  background: #2b2b2b;
+  border-radius: 8px;
+  padding: 3px 0;
+  gap: 2px;
+  touch-action: none;
+  user-select: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+}
+
+@media (max-width: 768px) {
+  .mobile-scroll-rail:not([hidden]) {
+    display: flex;
+  }
+}
+
+.mobile-scroll-arrow {
+  flex-shrink: 0;
+  width: 100%;
+  height: 14px;
+  border: none;
+  background: transparent;
+  color: #9a9a9a;
+  font-size: 7px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mobile-scroll-track {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 80px;
+  margin: 1px 0;
+}
+
+.mobile-scroll-thumb {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 9px;
+  height: 38px;
+  border-radius: 999px;
+  background: #9a9a9a;
+  cursor: grab;
+  touch-action: none;
+}
+
+.mobile-scroll-thumb.is-dragging {
+  cursor: grabbing;
+  background: #b8b8b8;
+}
+
 /* ---------- Loading / error ---------- */
 .loading-row {
   display: flex;
@@ -695,28 +762,6 @@ body {
 
 .jar-img-wrap {
   position: relative;
-}
-
-.jar-color-chip {
-  position: absolute;
-  top: 0.1rem;
-  right: 0.1rem;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 5px rgba(44, 26, 14, 0.22);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.jar-hex {
-  display: block;
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  color: rgba(44, 26, 14, 0.55);
-  margin-top: 0.2rem;
-  text-align: center;
 }
 
 .jar-img {
@@ -1137,7 +1182,6 @@ body {
 
 .admin-modal-actions {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.65rem;
   justify-content: center;
 }
@@ -1498,6 +1542,14 @@ body {
       </div>
     </div>
 
+    <div class="mobile-scroll-rail" id="mobileScrollRail" hidden aria-label="Scroll page">
+      <button type="button" class="mobile-scroll-arrow" id="mobileScrollUp" aria-label="Scroll up">▲</button>
+      <div class="mobile-scroll-track" id="mobileScrollTrack">
+        <div class="mobile-scroll-thumb" id="mobileScrollThumb"></div>
+      </div>
+      <button type="button" class="mobile-scroll-arrow" id="mobileScrollDown" aria-label="Scroll down">▼</button>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
     <script>
 /* ============================================================
@@ -1553,19 +1605,8 @@ const BADGES = [
   { icon: '⭐', label: 'Premium Ingredients' },
 ];
 
-function parseShadeId(value) {
-  return String(value).includes('.') ? parseFloat(value) : Number(value);
-}
-
-function shadeIdsEqual(a, b) {
-  if (a == null || b == null) return false;
-  return parseShadeId(a) === parseShadeId(b);
-}
-
 function getShadeById(id) {
-  if (id == null) return SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
-  const parsed = parseShadeId(id);
-  return SHADES.find((s) => s.id === parsed || String(s.id) === String(id)) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
+  return SHADES.find((s) => s.id === id) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
 }
 function getShadesByIds(ids) {
   return ids.map((id) => getShadeById(id));
@@ -1632,7 +1673,7 @@ function loadSavedShades() {
     const saved = JSON.parse(raw);
     if (!Array.isArray(saved)) return;
     saved.forEach((entry) => {
-      const shade = SHADES.find((s) => shadeIdsEqual(s.id, entry.id));
+      const shade = SHADES.find((s) => s.id === entry.id);
       if (!shade) return;
       if (entry.hex) shade.hex = normalizeHex(entry.hex) ?? shade.hex;
       if (typeof entry.opacity === 'number') shade.opacity = entry.opacity;
@@ -1996,6 +2037,11 @@ const dom = {
   adminChangeSave: document.getElementById('adminChangeSave'),
   adminChangeNewBack: document.getElementById('adminChangeNewBack'),
   adminChangeNewCancel: document.getElementById('adminChangeNewCancel'),
+  mobileScrollRail: document.getElementById('mobileScrollRail'),
+  mobileScrollTrack: document.getElementById('mobileScrollTrack'),
+  mobileScrollThumb: document.getElementById('mobileScrollThumb'),
+  mobileScrollUp: document.getElementById('mobileScrollUp'),
+  mobileScrollDown: document.getElementById('mobileScrollDown'),
   shadeEditorBackdrop: document.getElementById('shadeEditorBackdrop'),
   shadeEditorTitle: document.getElementById('shadeEditorTitle'),
   shadeEditorPreview: document.getElementById('shadeEditorPreview'),
@@ -2039,6 +2085,7 @@ let detectStarted = false;
 let detectAttempts = 0;
 let animFrame = null;
 let pendingTouch = null;
+let scrollRailDrag = null;
 
 const MOBILE_SCROLL_THRESHOLD = 10;
 const MOBILE_PAINT_THRESHOLD = 8;
@@ -2075,6 +2122,30 @@ function startSwatchDrag(e, hitId, coords) {
   renderView();
 }
 
+function getScrollMetrics() {
+  const scrollHeight = document.documentElement.scrollHeight;
+  const clientHeight = document.documentElement.clientHeight;
+  const maxScroll = Math.max(0, scrollHeight - clientHeight);
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  return { scrollTop, maxScroll, clientHeight, scrollHeight };
+}
+
+function updateMobileScrollThumb() {
+  if (!dom.mobileScrollThumb || !dom.mobileScrollTrack || dom.mobileScrollRail.hidden) return;
+  const { scrollTop, maxScroll } = getScrollMetrics();
+  const trackH = dom.mobileScrollTrack.clientHeight;
+  const thumbH = dom.mobileScrollThumb.offsetHeight || 38;
+  const travel = Math.max(0, trackH - thumbH);
+  const top = maxScroll > 0 ? (scrollTop / maxScroll) * travel : 0;
+  dom.mobileScrollThumb.style.top = `${top}px`;
+}
+
+function syncMobileScrollRail() {
+  if (!dom.mobileScrollRail) return;
+  dom.mobileScrollRail.hidden = !(isMobileLayout() && Boolean(state.imageSrc));
+  if (!dom.mobileScrollRail.hidden) updateMobileScrollThumb();
+}
+
 /* ---------- derived helpers ---------- */
 function getActiveShade() {
   return state.activeShadeId != null ? getShadeById(state.activeShadeId) : null;
@@ -2095,8 +2166,14 @@ function highlightSwatchId() {
   return state.draggingSwatchId ?? state.hoveredSwatchId;
 }
 
+function parseShadeId(value) {
+  return value.includes('.') ? parseFloat(value) : Number(value);
+}
+
 function canEditShade(shadeId) {
-  return state.adminAuthenticated;
+  if (!state.adminAuthenticated) return false;
+  if (!state.shadesLocked) return true;
+  return state.activeShadeId === shadeId;
 }
 
 function syncAdminBar() {
@@ -2106,81 +2183,24 @@ function syncAdminBar() {
   }
   dom.adminBar.hidden = false;
   dom.adminLockNote.textContent = state.shadesLocked
-    ? 'Colors saved — click any shade to edit'
-    : 'Unsaved changes — click Save colors when done';
+    ? 'Saved — only the active paint shade can be edited'
+    : 'Unsaved changes — click Save to lock colors';
 }
 
 function updateShadeEditorPreview(hex, opacityPercent) {
-  const norm = normalizeHex(hex) ?? hex;
   const opacity = opacityFromPercent(opacityPercent);
-  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(norm, opacity);
+  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(hex, opacity);
   dom.shadeEditorDarknessValue.textContent = `${Math.round(opacityPercent)}%`;
-  syncEditingShadeDisplay(norm, opacityPercent);
-}
-
-function findShadeUiNodes(shadeId) {
-  const powderBtn = [...dom.powderList.querySelectorAll('.powder-swatch-btn')].find((btn) =>
-    shadeIdsEqual(btn.dataset.shadeId, shadeId)
-  );
-  const jarBtn = [...dom.shadeGrid.querySelectorAll('.shade-jar')].find((btn) =>
-    shadeIdsEqual(btn.dataset.shadeId, shadeId)
-  );
-  return { powderBtn, jarBtn };
-}
-
-function syncEditingShadeDisplay(hex, opacityPercent) {
-  if (state.editingShadeId == null) return;
-  const norm = normalizeHex(hex);
-  if (!norm) return;
-  const { powderBtn, jarBtn } = findShadeUiNodes(state.editingShadeId);
-  if (powderBtn) {
-    const fill = powderBtn.querySelector('.powder-swatch-fill');
-    if (fill) fill.style.backgroundColor = norm;
-    const hexLabel = powderBtn.querySelector('.powder-hex');
-    if (hexLabel) {
-      hexLabel.textContent = state.adminAuthenticated
-        ? `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`
-        : norm.toLowerCase();
-    }
-  }
-  if (jarBtn) {
-    const chip = jarBtn.querySelector('.jar-color-chip');
-    if (chip) chip.style.backgroundColor = norm;
-    const hexLabel = jarBtn.querySelector('.jar-hex');
-    if (hexLabel) hexLabel.textContent = `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`;
-  }
-}
-
-function updateShadeColorInUI(shade) {
-  const opacityPercent = getShadeOpacityPercent(shade);
-  const { powderBtn, jarBtn } = findShadeUiNodes(shade.id);
-  if (powderBtn) {
-    const fill = powderBtn.querySelector('.powder-swatch-fill');
-    if (fill) fill.style.backgroundColor = shade.hex;
-    const hexLabel = powderBtn.querySelector('.powder-hex');
-    if (hexLabel) {
-      hexLabel.textContent = state.adminAuthenticated
-        ? `${shade.hex.toLowerCase()} · ${opacityPercent}%`
-        : shade.hex.toLowerCase();
-    }
-  }
-  if (jarBtn) {
-    const chip = jarBtn.querySelector('.jar-color-chip');
-    if (chip) chip.style.backgroundColor = shade.hex;
-    const hexLabel = jarBtn.querySelector('.jar-hex');
-    if (hexLabel) hexLabel.textContent = `${shade.hex.toLowerCase()} · ${opacityPercent}%`;
-  }
 }
 
 function openShadeEditor(shadeId) {
-  if (!state.adminAuthenticated) return;
+  if (!canEditShade(shadeId)) return;
   const shade = getShadeById(shadeId);
-  if (!shade) return;
   const opacityPercent = getShadeOpacityPercent(shade);
-  state.editingShadeId = shade.id;
+  state.editingShadeId = shadeId;
   dom.shadeEditorTitle.textContent = `Edit shade ${shade.id}`;
   dom.shadeEditorHex.value = shade.hex;
-  dom.shadeEditorPicker.value = shade.hex.toLowerCase();
+  dom.shadeEditorPicker.value = shade.hex;
   dom.shadeEditorDarkness.value = String(opacityPercent);
   dom.shadeEditorError.hidden = true;
   updateShadeEditorPreview(shade.hex, opacityPercent);
@@ -2202,24 +2222,12 @@ function applyShadeEditor() {
     return;
   }
   const shade = getShadeById(shadeId);
-  if (!shade) return;
   shade.hex = norm;
   shade.opacity = opacityFromPercent(dom.shadeEditorDarkness.value);
   delete shade.darkness;
-
-  saveShadesToStorage();
-  state.shadesLocked = true;
-
-  if (shadeIdsEqual(state.activeShadeId, shade.id)) {
-    paintedShadeHex = norm;
-    setupCanvases();
-    refreshPaintDisplay();
-  }
-
   closeShadeEditor();
   renderShadePanels();
   renderOverlay();
-  syncAdminBar();
   renderView();
 }
 
@@ -2384,8 +2392,9 @@ function renderShadePanels() {
     btn.className = 'powder-swatch-btn';
     if (state.adminAuthenticated) {
       btn.classList.add('powder-swatch-btn--admin-editable');
+      if (state.shadesLocked && !canEditShade(shade.id)) btn.classList.add('powder-swatch-btn--locked');
     }
-    btn.dataset.shadeId = String(shade.id);
+    btn.dataset.shadeId = shade.id;
     btn.innerHTML = `
       <span class="powder-swatch-pan">
         <span class="powder-swatch-fill" style="background-color:${displayHex}"></span>
@@ -2394,7 +2403,7 @@ function renderShadePanels() {
       <span class="powder-hex">${displayHex.toLowerCase()}${opacityLabel}</span>
     `;
     btn.addEventListener('click', () => {
-      if (state.adminAuthenticated) {
+      if (state.adminAuthenticated && canEditShade(shade.id)) {
         openShadeEditor(shade.id);
         return;
       }
@@ -2417,7 +2426,6 @@ function renderShadePanels() {
     btn.innerHTML = `
       <span class="jar-img-wrap">
         <img class="jar-img" src="${shade.image}" alt="${shade.name} foundation jar" draggable="false" />
-        <span class="jar-color-chip" style="background-color:${displayHex}"></span>
         <span class="jar-badge">${shade.id}</span>
       </span>
       <span class="jar-info">
@@ -2425,15 +2433,10 @@ function renderShadePanels() {
         <span class="jar-desc">${shade.descriptor}</span>
         <span class="jar-undertone">${shade.undertone}</span>
         <span class="jar-match">${shade.match}%</span>
-        ${state.adminAuthenticated ? `<span class="jar-hex">${displayHex.toLowerCase()} · ${getShadeOpacityPercent(shade)}%</span>` : ''}
       </span>
     `;
     btn.style.display = 'flex';
     btn.addEventListener('click', () => {
-      if (state.adminAuthenticated) {
-        openShadeEditor(shade.id);
-        return;
-      }
       if (!state.imageSrc) return;
       selectShade(shade.id);
     });
@@ -2461,10 +2464,12 @@ function syncShadeSelectionUI() {
   const hasImage = Boolean(state.imageSrc);
   dom.powderList.querySelectorAll('.powder-swatch-btn').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
-    btn.disabled = state.adminAuthenticated ? false : !hasImage;
+    btn.disabled = !hasImage && !(state.adminAuthenticated && canEditShade(id));
     const pan = btn.querySelector('.powder-swatch-pan');
     pan.classList.toggle('powder-swatch-pan--active', id === state.activeShadeId);
-    btn.classList.remove('powder-swatch-btn--locked');
+    if (state.adminAuthenticated) {
+      btn.classList.toggle('powder-swatch-btn--locked', state.shadesLocked && !canEditShade(id));
+    }
   });
   dom.shadeGrid.querySelectorAll('.shade-jar').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
@@ -2526,6 +2531,7 @@ function renderView() {
   dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
 
   syncTouchLock();
+  syncMobileScrollRail();
 
   syncShadeSelectionUI();
 }
@@ -3156,11 +3162,7 @@ function wireEvents() {
 
   dom.adminPasswordSubmit.addEventListener('click', verifyAdminPassword);
   dom.adminPasswordCancel.addEventListener('click', hidePasswordModal);
-  dom.adminPasswordChangeBtn.addEventListener('click', () => {
-    clearPasswordModalFields();
-    showPasswordPanel('change-old');
-    dom.adminOldPasswordInput.focus();
-  });
+  dom.adminPasswordChangeBtn.addEventListener('click', promptChangePassword);
   dom.adminPasswordInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') verifyAdminPassword();
   });
@@ -3199,26 +3201,69 @@ function wireEvents() {
   dom.shadeEditorHex.addEventListener('input', () => {
     const norm = normalizeHex(dom.shadeEditorHex.value);
     if (norm) {
-      dom.shadeEditorPicker.value = norm.toLowerCase();
+      dom.shadeEditorPicker.value = norm;
       updateShadeEditorPreview(norm, Number(dom.shadeEditorDarkness.value));
     }
   });
 
   dom.shadeEditorPicker.addEventListener('input', () => {
-    const picked = dom.shadeEditorPicker.value.toUpperCase();
-    dom.shadeEditorHex.value = picked;
-    updateShadeEditorPreview(picked, Number(dom.shadeEditorDarkness.value));
+    dom.shadeEditorHex.value = dom.shadeEditorPicker.value.toUpperCase();
+    updateShadeEditorPreview(dom.shadeEditorPicker.value, Number(dom.shadeEditorDarkness.value));
   });
 
   dom.shadeEditorDarkness.addEventListener('input', () => {
     const hex = normalizeHex(dom.shadeEditorHex.value) ?? dom.shadeEditorPicker.value;
     updateShadeEditorPreview(hex, Number(dom.shadeEditorDarkness.value));
   });
+
+  window.addEventListener('scroll', () => updateMobileScrollThumb(), { passive: true });
+  window.addEventListener('resize', () => syncMobileScrollRail());
+
+  dom.mobileScrollUp?.addEventListener('click', () => window.scrollBy({ top: -120, behavior: 'smooth' }));
+  dom.mobileScrollDown?.addEventListener('click', () => window.scrollBy({ top: 120, behavior: 'smooth' }));
+
+  dom.mobileScrollThumb?.addEventListener('pointerdown', (e) => {
+    scrollRailDrag = { startY: e.clientY, startScroll: window.scrollY };
+    dom.mobileScrollThumb.classList.add('is-dragging');
+    dom.mobileScrollThumb.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  });
+  dom.mobileScrollThumb?.addEventListener('pointermove', (e) => {
+    if (!scrollRailDrag) return;
+    const trackH = dom.mobileScrollTrack.clientHeight;
+    const thumbH = dom.mobileScrollThumb.offsetHeight || 38;
+    const travel = Math.max(1, trackH - thumbH);
+    const { maxScroll } = getScrollMetrics();
+    const dy = e.clientY - scrollRailDrag.startY;
+    scrollRailDrag.startY = e.clientY;
+    window.scrollBy(0, (dy / travel) * maxScroll);
+    e.preventDefault();
+  });
+  const endScrollRailDrag = (e) => {
+    scrollRailDrag = null;
+    dom.mobileScrollThumb?.classList.remove('is-dragging');
+    if (dom.mobileScrollThumb?.hasPointerCapture?.(e.pointerId)) {
+      dom.mobileScrollThumb.releasePointerCapture(e.pointerId);
+    }
+  };
+  dom.mobileScrollThumb?.addEventListener('pointerup', endScrollRailDrag);
+  dom.mobileScrollThumb?.addEventListener('pointercancel', endScrollRailDrag);
+
+  dom.mobileScrollTrack?.addEventListener('pointerdown', (e) => {
+    if (e.target === dom.mobileScrollThumb) return;
+    const rect = dom.mobileScrollTrack.getBoundingClientRect();
+    const thumbH = dom.mobileScrollThumb.offsetHeight || 38;
+    const clickY = e.clientY - rect.top - thumbH / 2;
+    const travel = Math.max(1, rect.height - thumbH);
+    const { maxScroll } = getScrollMetrics();
+    window.scrollTo({ top: (clickY / travel) * maxScroll, behavior: 'smooth' });
+  });
 }
 
 /* ---------- Init ---------- */
 initAdminMode();
 syncBrushSizeUI();
+syncMobileScrollRail();
 renderShadePanels();
 wireEvents();
 renderView();
