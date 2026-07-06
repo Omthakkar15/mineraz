@@ -272,32 +272,8 @@ body {
   border: 2px solid rgba(201, 169, 110, 0.25);
   isolation: isolate;
   background: #efe5d8;
-  touch-action: pan-y pinch-zoom;
+  touch-action: none;
   box-shadow: 0 14px 36px rgba(45, 31, 22, 0.14), 0 2px 10px rgba(45, 31, 22, 0.08);
-}
-
-@media (min-width: 769px) {
-  .face-frame.face-frame--touch-lock {
-    touch-action: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .photo-stage,
-  .face-canvas-wrap {
-    touch-action: pan-y;
-  }
-
-  .face-frame {
-    max-height: min(52vh, 22rem);
-  }
-
-  .face-frame #faceImage {
-    max-height: min(52vh, 22rem);
-    width: 100%;
-    object-fit: contain;
-    background: #efe5d8;
-  }
 }
 
 .face-frame.cursor-none {
@@ -700,28 +676,6 @@ body {
 
 .jar-img-wrap {
   position: relative;
-}
-
-.jar-color-chip {
-  position: absolute;
-  top: 0.1rem;
-  right: 0.1rem;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 1px 5px rgba(44, 26, 14, 0.22);
-  pointer-events: none;
-  z-index: 2;
-}
-
-.jar-hex {
-  display: block;
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  color: rgba(44, 26, 14, 0.55);
-  margin-top: 0.2rem;
-  text-align: center;
 }
 
 .jar-img {
@@ -1142,47 +1096,8 @@ body {
 
 .admin-modal-actions {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.65rem;
   justify-content: center;
-}
-
-.admin-modal-link-btn {
-  display: inline-block;
-  margin-top: 0.35rem;
-  padding: 0;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: 0.75rem;
-  color: rgba(44, 26, 14, 0.55);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.admin-modal-link-btn:hover {
-  color: var(--accent-gold);
-}
-
-.admin-change-pwd-btn {
-  padding: 0.4rem 1.1rem;
-  font-family: inherit;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: rgba(255, 252, 248, 0.95);
-  color: rgba(44, 26, 14, 0.75);
-  border: 1px solid rgba(190, 150, 100, 0.45);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.18s, border-color 0.18s;
-}
-
-.admin-change-pwd-btn:hover {
-  background: rgba(255, 252, 248, 1);
-  border-color: var(--accent-gold);
-  color: var(--text-primary);
 }
 
 .shade-editor-modal {
@@ -1292,7 +1207,6 @@ body {
           <span class="admin-lock-note" id="adminLockNote"></span>
           <div class="admin-bar-actions">
             <button type="button" class="admin-save-btn" id="adminSaveBtn">Save colors</button>
-            <button type="button" class="admin-change-pwd-btn" id="adminChangePwdBtn">Change password</button>
             <button type="button" class="admin-close-btn" id="adminCloseBtn">Close</button>
           </div>
         </div>
@@ -1431,41 +1345,13 @@ body {
     <!-- Admin password modal -->
     <div class="admin-modal-backdrop" id="adminPasswordBackdrop" hidden>
       <div class="admin-modal" role="dialog" aria-labelledby="adminPasswordTitle">
-        <div id="adminUnlockPanel">
-          <h3 id="adminPasswordTitle">Owner access</h3>
-          <p id="adminPasswordDesc">Enter password to edit foundation shades</p>
-          <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="current-password" />
-          <p class="admin-modal-error" id="adminPasswordError" hidden></p>
-          <div class="admin-modal-actions">
-            <button type="button" class="btn btn-primary" id="adminPasswordSubmit">Unlock</button>
-            <button type="button" class="btn btn-outline" id="adminPasswordCancel">Cancel</button>
-          </div>
-          <button type="button" class="admin-modal-link-btn" id="adminPasswordChangeBtn">Change password</button>
-        </div>
-
-        <div id="adminChangeOldPanel" hidden>
-          <h3>Change password</h3>
-          <p>Enter your current password</p>
-          <input type="password" id="adminOldPasswordInput" placeholder="Current password" autocomplete="current-password" />
-          <p class="admin-modal-error" id="adminChangeOldError" hidden></p>
-          <div class="admin-modal-actions">
-            <button type="button" class="btn btn-primary" id="adminChangeOldNext">Next</button>
-            <button type="button" class="btn btn-outline" id="adminChangeOldBack">Back</button>
-            <button type="button" class="btn btn-outline" id="adminChangeOldCancel">Cancel</button>
-          </div>
-        </div>
-
-        <div id="adminChangeNewPanel" hidden>
-          <h3>Change password</h3>
-          <p>Enter your new password</p>
-          <input type="password" id="adminNewPasswordInput" placeholder="New password" autocomplete="new-password" />
-          <input type="password" id="adminConfirmPasswordInput" placeholder="Confirm new password" autocomplete="new-password" />
-          <p class="admin-modal-error" id="adminChangeNewError" hidden></p>
-          <div class="admin-modal-actions">
-            <button type="button" class="btn btn-primary" id="adminChangeSave">Save password</button>
-            <button type="button" class="btn btn-outline" id="adminChangeNewBack">Back</button>
-            <button type="button" class="btn btn-outline" id="adminChangeNewCancel">Cancel</button>
-          </div>
+        <h3 id="adminPasswordTitle">Owner access</h3>
+        <p>Enter password to edit foundation shades</p>
+        <input type="password" id="adminPasswordInput" placeholder="Password" autocomplete="current-password" />
+        <p class="admin-modal-error" id="adminPasswordError" hidden></p>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn btn-primary" id="adminPasswordSubmit">Unlock</button>
+          <button type="button" class="btn btn-outline" id="adminPasswordCancel">Cancel</button>
         </div>
       </div>
     </div>
@@ -1526,10 +1412,8 @@ const SHADES = [
 ];
 
 const ADMIN_PASSWORD_HASH = '9da696304b3165bb6b693478815834d32d9fdde622c7f18a0f6a57f45c746af9';
-const ADMIN_PASSWORD_STORAGE_KEY = 'mineraz-admin-password-hash';
 const SHADES_STORAGE_KEY = 'mineraz-shades-config';
 const ADMIN_SESSION_KEY = 'mineraz-admin-session';
-const MIN_PASSWORD_LENGTH = 6;
 
 const LEFT_CHEEK_SHADE_IDS = [1, 2, 2.5, 3];
 const RIGHT_CHEEK_SHADE_IDS = [4, 5, 6];
@@ -1559,14 +1443,7 @@ const BADGES = [
 ];
 
 function getShadeById(id) {
-  if (id == null) return SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
-  const parsed = parseShadeId(String(id));
-  return SHADES.find((s) => s.id === parsed || String(s.id) === String(id)) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
-}
-
-function shadeIdsEqual(a, b) {
-  if (a == null || b == null) return false;
-  return parseShadeId(String(a)) === parseShadeId(String(b));
+  return SHADES.find((s) => s.id === id) ?? SHADES.find((s) => s.id === DEFAULT_BEST_MATCH_ID);
 }
 function getShadesByIds(ids) {
   return ids.map((id) => getShadeById(id));
@@ -1618,14 +1495,6 @@ async function hashPassword(password) {
     .join('');
 }
 
-function getAdminPasswordHash() {
-  return localStorage.getItem(ADMIN_PASSWORD_STORAGE_KEY) || ADMIN_PASSWORD_HASH;
-}
-
-function saveAdminPasswordHash(hash) {
-  localStorage.setItem(ADMIN_PASSWORD_STORAGE_KEY, hash);
-}
-
 function loadSavedShades() {
   try {
     const raw = localStorage.getItem(SHADES_STORAGE_KEY);
@@ -1633,7 +1502,7 @@ function loadSavedShades() {
     const saved = JSON.parse(raw);
     if (!Array.isArray(saved)) return;
     saved.forEach((entry) => {
-      const shade = SHADES.find((s) => shadeIdsEqual(s.id, entry.id));
+      const shade = SHADES.find((s) => s.id === entry.id);
       if (!shade) return;
       if (entry.hex) shade.hex = normalizeHex(entry.hex) ?? shade.hex;
       if (typeof entry.opacity === 'number') shade.opacity = entry.opacity;
@@ -1975,28 +1844,12 @@ const dom = {
   adminBar: document.getElementById('adminBar'),
   adminLockNote: document.getElementById('adminLockNote'),
   adminSaveBtn: document.getElementById('adminSaveBtn'),
-  adminChangePwdBtn: document.getElementById('adminChangePwdBtn'),
   adminCloseBtn: document.getElementById('adminCloseBtn'),
   adminPasswordBackdrop: document.getElementById('adminPasswordBackdrop'),
-  adminUnlockPanel: document.getElementById('adminUnlockPanel'),
-  adminChangeOldPanel: document.getElementById('adminChangeOldPanel'),
-  adminChangeNewPanel: document.getElementById('adminChangeNewPanel'),
   adminPasswordInput: document.getElementById('adminPasswordInput'),
   adminPasswordError: document.getElementById('adminPasswordError'),
   adminPasswordSubmit: document.getElementById('adminPasswordSubmit'),
   adminPasswordCancel: document.getElementById('adminPasswordCancel'),
-  adminPasswordChangeBtn: document.getElementById('adminPasswordChangeBtn'),
-  adminOldPasswordInput: document.getElementById('adminOldPasswordInput'),
-  adminChangeOldError: document.getElementById('adminChangeOldError'),
-  adminChangeOldNext: document.getElementById('adminChangeOldNext'),
-  adminChangeOldBack: document.getElementById('adminChangeOldBack'),
-  adminChangeOldCancel: document.getElementById('adminChangeOldCancel'),
-  adminNewPasswordInput: document.getElementById('adminNewPasswordInput'),
-  adminConfirmPasswordInput: document.getElementById('adminConfirmPasswordInput'),
-  adminChangeNewError: document.getElementById('adminChangeNewError'),
-  adminChangeSave: document.getElementById('adminChangeSave'),
-  adminChangeNewBack: document.getElementById('adminChangeNewBack'),
-  adminChangeNewCancel: document.getElementById('adminChangeNewCancel'),
   shadeEditorBackdrop: document.getElementById('shadeEditorBackdrop'),
   shadeEditorTitle: document.getElementById('shadeEditorTitle'),
   shadeEditorPreview: document.getElementById('shadeEditorPreview'),
@@ -2039,51 +1892,6 @@ let draggingSwatch = null;
 let detectStarted = false;
 let detectAttempts = 0;
 let animFrame = null;
-let pendingTouch = null;
-
-const MOBILE_SCROLL_THRESHOLD = 8;
-const MOBILE_PAINT_THRESHOLD = 10;
-
-function isMobileLayout() {
-  return window.matchMedia('(max-width: 768px)').matches;
-}
-
-function isMobileTouch(e) {
-  return isMobileLayout() && e.pointerType === 'touch';
-}
-
-function syncPhotoInteraction() {
-  const interactive = isToolActive() || isSwatchMoveActive();
-  if (isMobileLayout()) {
-    dom.paintArea.style.pointerEvents = interactive ? 'auto' : 'none';
-  } else {
-    dom.paintArea.style.pointerEvents = '';
-  }
-}
-
-function syncTouchLock() {
-  const lockTouch = !isMobileLayout() && (isToolActive() || Boolean(draggingSwatch));
-  dom.paintArea.classList.toggle('face-frame--touch-lock', lockTouch);
-}
-
-function startPainting(e, coords) {
-  e.preventDefault();
-  dom.paintArea.setPointerCapture?.(e.pointerId);
-  isPainting = true;
-  syncTouchLock();
-  if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
-  else applyPaintAt(coords.x, coords.y, true);
-}
-
-function startSwatchDrag(e, hitId, coords) {
-  e.preventDefault();
-  dom.paintArea.setPointerCapture?.(e.pointerId);
-  const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
-  draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
-  state.draggingSwatchId = hitId;
-  syncTouchLock();
-  renderView();
-}
 
 /* ---------- derived helpers ---------- */
 function getActiveShade() {
@@ -2110,7 +1918,9 @@ function parseShadeId(value) {
 }
 
 function canEditShade(shadeId) {
-  return state.adminAuthenticated;
+  if (!state.adminAuthenticated) return false;
+  if (!state.shadesLocked) return true;
+  return state.activeShadeId === shadeId;
 }
 
 function syncAdminBar() {
@@ -2120,81 +1930,24 @@ function syncAdminBar() {
   }
   dom.adminBar.hidden = false;
   dom.adminLockNote.textContent = state.shadesLocked
-    ? 'Colors saved — click any shade to edit'
-    : 'Unsaved changes — click Save colors when done';
+    ? 'Saved — only the active paint shade can be edited'
+    : 'Unsaved changes — click Save to lock colors';
 }
 
 function updateShadeEditorPreview(hex, opacityPercent) {
-  const norm = normalizeHex(hex) ?? hex;
   const opacity = opacityFromPercent(opacityPercent);
-  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(norm, opacity);
+  dom.shadeEditorPreview.style.backgroundColor = hexToRgba(hex, opacity);
   dom.shadeEditorDarknessValue.textContent = `${Math.round(opacityPercent)}%`;
-  syncEditingShadeDisplay(norm, opacityPercent);
-}
-
-function findShadeUiNodes(shadeId) {
-  const powderBtn = [...dom.powderList.querySelectorAll('.powder-swatch-btn')].find((btn) =>
-    shadeIdsEqual(btn.dataset.shadeId, shadeId)
-  );
-  const jarBtn = [...dom.shadeGrid.querySelectorAll('.shade-jar')].find((btn) =>
-    shadeIdsEqual(btn.dataset.shadeId, shadeId)
-  );
-  return { powderBtn, jarBtn };
-}
-
-function syncEditingShadeDisplay(hex, opacityPercent) {
-  if (state.editingShadeId == null) return;
-  const norm = normalizeHex(hex);
-  if (!norm) return;
-  const { powderBtn, jarBtn } = findShadeUiNodes(state.editingShadeId);
-  if (powderBtn) {
-    const fill = powderBtn.querySelector('.powder-swatch-fill');
-    if (fill) fill.style.backgroundColor = norm;
-    const hexLabel = powderBtn.querySelector('.powder-hex');
-    if (hexLabel) {
-      hexLabel.textContent = state.adminAuthenticated
-        ? `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`
-        : norm.toLowerCase();
-    }
-  }
-  if (jarBtn) {
-    const chip = jarBtn.querySelector('.jar-color-chip');
-    if (chip) chip.style.backgroundColor = norm;
-    const hexLabel = jarBtn.querySelector('.jar-hex');
-    if (hexLabel) hexLabel.textContent = `${norm.toLowerCase()} · ${Math.round(opacityPercent)}%`;
-  }
-}
-
-function updateShadeColorInUI(shade) {
-  const opacityPercent = getShadeOpacityPercent(shade);
-  const { powderBtn, jarBtn } = findShadeUiNodes(shade.id);
-  if (powderBtn) {
-    const fill = powderBtn.querySelector('.powder-swatch-fill');
-    if (fill) fill.style.backgroundColor = shade.hex;
-    const hexLabel = powderBtn.querySelector('.powder-hex');
-    if (hexLabel) {
-      hexLabel.textContent = state.adminAuthenticated
-        ? `${shade.hex.toLowerCase()} · ${opacityPercent}%`
-        : shade.hex.toLowerCase();
-    }
-  }
-  if (jarBtn) {
-    const chip = jarBtn.querySelector('.jar-color-chip');
-    if (chip) chip.style.backgroundColor = shade.hex;
-    const hexLabel = jarBtn.querySelector('.jar-hex');
-    if (hexLabel) hexLabel.textContent = `${shade.hex.toLowerCase()} · ${opacityPercent}%`;
-  }
 }
 
 function openShadeEditor(shadeId) {
-  if (!state.adminAuthenticated) return;
+  if (!canEditShade(shadeId)) return;
   const shade = getShadeById(shadeId);
-  if (!shade) return;
   const opacityPercent = getShadeOpacityPercent(shade);
-  state.editingShadeId = shade.id;
+  state.editingShadeId = shadeId;
   dom.shadeEditorTitle.textContent = `Edit shade ${shade.id}`;
   dom.shadeEditorHex.value = shade.hex;
-  dom.shadeEditorPicker.value = shade.hex.toLowerCase();
+  dom.shadeEditorPicker.value = shade.hex;
   dom.shadeEditorDarkness.value = String(opacityPercent);
   dom.shadeEditorError.hidden = true;
   updateShadeEditorPreview(shade.hex, opacityPercent);
@@ -2216,124 +1969,35 @@ function applyShadeEditor() {
     return;
   }
   const shade = getShadeById(shadeId);
-  if (!shade) return;
   shade.hex = norm;
   shade.opacity = opacityFromPercent(dom.shadeEditorDarkness.value);
   delete shade.darkness;
-
-  saveShadesToStorage();
-  state.shadesLocked = true;
-
-  if (shadeIdsEqual(state.activeShadeId, shade.id)) {
-    paintedShadeHex = norm;
-    setupCanvases();
-    refreshPaintDisplay();
-  }
-
-  updateShadeColorInUI(shade);
   closeShadeEditor();
+  renderShadePanels();
   renderOverlay();
-  syncAdminBar();
   renderView();
 }
 
 async function promptAdminPassword() {
-  clearPasswordModalFields();
-  showPasswordPanel('unlock');
+  dom.adminPasswordInput.value = '';
+  dom.adminPasswordError.hidden = true;
   dom.adminPasswordBackdrop.hidden = false;
   dom.adminPasswordInput.focus();
-}
-
-function promptChangePassword() {
-  clearPasswordModalFields();
-  showPasswordPanel('change-old');
-  dom.adminPasswordBackdrop.hidden = false;
-  dom.adminOldPasswordInput.focus();
 }
 
 async function verifyAdminPassword() {
   const password = dom.adminPasswordInput.value;
   const hash = await hashPassword(password);
-  if (hash !== getAdminPasswordHash()) {
+  if (hash !== ADMIN_PASSWORD_HASH) {
     dom.adminPasswordError.hidden = false;
     dom.adminPasswordError.textContent = 'Incorrect password';
     return;
   }
   state.adminAuthenticated = true;
   sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-  hidePasswordModal();
-  syncAdminBar();
-  renderShadePanels();
-}
-
-async function verifyOldPasswordForChange() {
-  const password = dom.adminOldPasswordInput.value;
-  if (!password) {
-    dom.adminChangeOldError.hidden = false;
-    dom.adminChangeOldError.textContent = 'Enter your current password';
-    return;
-  }
-  const hash = await hashPassword(password);
-  if (hash !== getAdminPasswordHash()) {
-    dom.adminChangeOldError.hidden = false;
-    dom.adminChangeOldError.textContent = 'Current password is incorrect';
-    return;
-  }
-  dom.adminChangeOldError.hidden = true;
-  dom.adminNewPasswordInput.value = '';
-  dom.adminConfirmPasswordInput.value = '';
-  dom.adminChangeNewError.hidden = true;
-  showPasswordPanel('change-new');
-  dom.adminNewPasswordInput.focus();
-}
-
-async function saveNewAdminPassword() {
-  const newPassword = dom.adminNewPasswordInput.value;
-  const confirmPassword = dom.adminConfirmPasswordInput.value;
-  if (newPassword.length < MIN_PASSWORD_LENGTH) {
-    dom.adminChangeNewError.hidden = false;
-    dom.adminChangeNewError.textContent = `New password must be at least ${MIN_PASSWORD_LENGTH} characters`;
-    return;
-  }
-  if (newPassword !== confirmPassword) {
-    dom.adminChangeNewError.hidden = false;
-    dom.adminChangeNewError.textContent = 'New passwords do not match';
-    return;
-  }
-  const newHash = await hashPassword(newPassword);
-  if (newHash === getAdminPasswordHash()) {
-    dom.adminChangeNewError.hidden = false;
-    dom.adminChangeNewError.textContent = 'New password must be different from the current password';
-    return;
-  }
-  saveAdminPasswordHash(newHash);
-  hidePasswordModal();
-  state.adminAuthenticated = true;
-  sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
-  syncAdminBar();
-  renderShadePanels();
-  alert('Password changed successfully.');
-}
-
-function showPasswordPanel(panel) {
-  dom.adminUnlockPanel.hidden = panel !== 'unlock';
-  dom.adminChangeOldPanel.hidden = panel !== 'change-old';
-  dom.adminChangeNewPanel.hidden = panel !== 'change-new';
-}
-
-function hidePasswordModal() {
   dom.adminPasswordBackdrop.hidden = true;
-  showPasswordPanel('unlock');
-}
-
-function clearPasswordModalFields() {
-  dom.adminPasswordInput.value = '';
-  dom.adminOldPasswordInput.value = '';
-  dom.adminNewPasswordInput.value = '';
-  dom.adminConfirmPasswordInput.value = '';
-  dom.adminPasswordError.hidden = true;
-  dom.adminChangeOldError.hidden = true;
-  dom.adminChangeNewError.hidden = true;
+  syncAdminBar();
+  renderShadePanels();
 }
 
 function saveAdminShades() {
@@ -2355,7 +2019,7 @@ function saveAdminShades() {
 
 function closeAdminMode() {
   closeShadeEditor();
-  hidePasswordModal();
+  dom.adminPasswordBackdrop.hidden = true;
   state.adminAuthenticated = false;
   sessionStorage.removeItem(ADMIN_SESSION_KEY);
   syncAdminBar();
@@ -2398,8 +2062,9 @@ function renderShadePanels() {
     btn.className = 'powder-swatch-btn';
     if (state.adminAuthenticated) {
       btn.classList.add('powder-swatch-btn--admin-editable');
+      if (state.shadesLocked && !canEditShade(shade.id)) btn.classList.add('powder-swatch-btn--locked');
     }
-    btn.dataset.shadeId = String(shade.id);
+    btn.dataset.shadeId = shade.id;
     btn.innerHTML = `
       <span class="powder-swatch-pan">
         <span class="powder-swatch-fill" style="background-color:${displayHex}"></span>
@@ -2408,7 +2073,7 @@ function renderShadePanels() {
       <span class="powder-hex">${displayHex.toLowerCase()}${opacityLabel}</span>
     `;
     btn.addEventListener('click', () => {
-      if (state.adminAuthenticated) {
+      if (state.adminAuthenticated && canEditShade(shade.id)) {
         openShadeEditor(shade.id);
         return;
       }
@@ -2431,7 +2096,6 @@ function renderShadePanels() {
     btn.innerHTML = `
       <span class="jar-img-wrap">
         <img class="jar-img" src="${shade.image}" alt="${shade.name} foundation jar" draggable="false" />
-        <span class="jar-color-chip" style="background-color:${displayHex}"></span>
         <span class="jar-badge">${shade.id}</span>
       </span>
       <span class="jar-info">
@@ -2439,15 +2103,10 @@ function renderShadePanels() {
         <span class="jar-desc">${shade.descriptor}</span>
         <span class="jar-undertone">${shade.undertone}</span>
         <span class="jar-match">${shade.match}%</span>
-        ${state.adminAuthenticated ? `<span class="jar-hex">${displayHex.toLowerCase()} · ${getShadeOpacityPercent(shade)}%</span>` : ''}
       </span>
     `;
     btn.style.display = 'flex';
     btn.addEventListener('click', () => {
-      if (state.adminAuthenticated) {
-        openShadeEditor(shade.id);
-        return;
-      }
       if (!state.imageSrc) return;
       selectShade(shade.id);
     });
@@ -2475,10 +2134,12 @@ function syncShadeSelectionUI() {
   const hasImage = Boolean(state.imageSrc);
   dom.powderList.querySelectorAll('.powder-swatch-btn').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
-    btn.disabled = state.adminAuthenticated ? false : !hasImage;
+    btn.disabled = !hasImage && !(state.adminAuthenticated && canEditShade(id));
     const pan = btn.querySelector('.powder-swatch-pan');
     pan.classList.toggle('powder-swatch-pan--active', id === state.activeShadeId);
-    btn.classList.remove('powder-swatch-btn--locked');
+    if (state.adminAuthenticated) {
+      btn.classList.toggle('powder-swatch-btn--locked', state.shadesLocked && !canEditShade(id));
+    }
   });
   dom.shadeGrid.querySelectorAll('.shade-jar').forEach((btn) => {
     const id = parseShadeId(btn.dataset.shadeId);
@@ -2538,9 +2199,6 @@ function renderView() {
   dom.paintArea.classList.toggle('cursor-grabbing', Boolean(state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-grab', Boolean(highlightSwatchId() && swatchMove && !state.draggingSwatchId));
   dom.paintArea.classList.toggle('cursor-none', isToolActive() && !state.draggingSwatchId && !highlightSwatchId());
-
-  syncPhotoInteraction();
-  syncTouchLock();
 
   syncShadeSelectionUI();
 }
@@ -2883,22 +2541,23 @@ function onPointerDown(e) {
   if (!coords) return;
 
   if (isToolActive()) {
-    if (isMobileTouch(e)) {
-      pendingTouch = { pointerId: e.pointerId, type: 'paint', startX: coords.x, startY: coords.y };
-      return;
-    }
-    startPainting(e, coords);
+    e.preventDefault();
+    dom.paintArea.setPointerCapture?.(e.pointerId);
+    isPainting = true;
+    if (isEraseActive()) applyEraseAt(coords.x, coords.y, true);
+    else applyPaintAt(coords.x, coords.y, true);
     return;
   }
 
   if (isSwatchMoveActive()) {
     const hitId = hitTestSwatches(coords.x, coords.y, getAllSwatchPlacements());
     if (hitId != null) {
-      if (isMobileTouch(e)) {
-        pendingTouch = { pointerId: e.pointerId, type: 'swatch', hitId, startX: coords.x, startY: coords.y };
-        return;
-      }
-      startSwatchDrag(e, hitId, coords);
+      e.preventDefault();
+      dom.paintArea.setPointerCapture?.(e.pointerId);
+      const offset = state.swatchOffsets[hitId] ?? { x: 0, y: 0 };
+      draggingSwatch = { shadeId: hitId, originX: offset.x, originY: offset.y, pointerX: coords.x, pointerY: coords.y };
+      state.draggingSwatchId = hitId;
+      renderView();
     }
   }
 }
@@ -2906,22 +2565,6 @@ function onPointerDown(e) {
 function onPointerMove(e) {
   const coords = getLocalCoords(e);
   if (!coords) return;
-
-  if (pendingTouch && pendingTouch.pointerId === e.pointerId && !isPainting && !draggingSwatch) {
-    const dx = Math.abs(coords.x - pendingTouch.startX);
-    const dy = Math.abs(coords.y - pendingTouch.startY);
-    if (dy > MOBILE_SCROLL_THRESHOLD && dy >= dx) {
-      pendingTouch = null;
-      return;
-    }
-    if (Math.hypot(dx, dy) >= MOBILE_PAINT_THRESHOLD) {
-      const touch = pendingTouch;
-      pendingTouch = null;
-      if (touch.type === 'paint' && isToolActive()) startPainting(e, coords);
-      else if (touch.type === 'swatch') startSwatchDrag(e, touch.hitId, coords);
-    }
-    return;
-  }
 
   if (draggingSwatch) {
     e.preventDefault();
@@ -2950,16 +2593,6 @@ function onPointerMove(e) {
 }
 
 function onPointerUp(e) {
-  const coords = getLocalCoords(e);
-  if (pendingTouch && pendingTouch.pointerId === e.pointerId) {
-    const touch = pendingTouch;
-    pendingTouch = null;
-    if (coords && touch.type === 'paint' && isToolActive()) {
-      const dist = Math.hypot(coords.x - touch.startX, coords.y - touch.startY);
-      if (dist < MOBILE_PAINT_THRESHOLD) startPainting(e, coords);
-    }
-  }
-
   const wasErasing = isPainting && state.eraseMode;
   isPainting = false;
   lastPoint = null;
@@ -2971,7 +2604,6 @@ function onPointerUp(e) {
   if (dom.paintArea.hasPointerCapture?.(e.pointerId)) {
     dom.paintArea.releasePointerCapture(e.pointerId);
   }
-  syncTouchLock();
   if (wasErasing) checkHasPaint();
 }
 
@@ -2983,7 +2615,6 @@ function onPointerEnter(e) {
 
 function onPointerLeave() {
   updateBrushCursor(null);
-  pendingTouch = null;
   if (!draggingSwatch) {
     if (state.hoveredSwatchId != null) {
       state.hoveredSwatchId = null;
@@ -2991,7 +2622,6 @@ function onPointerLeave() {
     }
     isPainting = false;
     lastPoint = null;
-    syncTouchLock();
   }
 }
 
@@ -3170,42 +2800,14 @@ function wireEvents() {
   dom.ownerUnlockTarget.addEventListener('click', handleOwnerUnlockClick);
 
   dom.adminPasswordSubmit.addEventListener('click', verifyAdminPassword);
-  dom.adminPasswordCancel.addEventListener('click', hidePasswordModal);
-  dom.adminPasswordChangeBtn.addEventListener('click', () => {
-    clearPasswordModalFields();
-    showPasswordPanel('change-old');
-    dom.adminOldPasswordInput.focus();
+  dom.adminPasswordCancel.addEventListener('click', () => {
+    dom.adminPasswordBackdrop.hidden = true;
   });
   dom.adminPasswordInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') verifyAdminPassword();
   });
 
-  dom.adminChangeOldNext.addEventListener('click', verifyOldPasswordForChange);
-  dom.adminChangeOldBack.addEventListener('click', () => {
-    clearPasswordModalFields();
-    showPasswordPanel('unlock');
-    dom.adminPasswordInput.focus();
-  });
-  dom.adminChangeOldCancel.addEventListener('click', hidePasswordModal);
-  dom.adminOldPasswordInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') verifyOldPasswordForChange();
-  });
-
-  dom.adminChangeSave.addEventListener('click', saveNewAdminPassword);
-  dom.adminChangeNewBack.addEventListener('click', () => {
-    dom.adminNewPasswordInput.value = '';
-    dom.adminConfirmPasswordInput.value = '';
-    dom.adminChangeNewError.hidden = true;
-    showPasswordPanel('change-old');
-    dom.adminOldPasswordInput.focus();
-  });
-  dom.adminChangeNewCancel.addEventListener('click', hidePasswordModal);
-  dom.adminConfirmPasswordInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') saveNewAdminPassword();
-  });
-
   dom.adminSaveBtn.addEventListener('click', saveAdminShades);
-  dom.adminChangePwdBtn.addEventListener('click', promptChangePassword);
   dom.adminCloseBtn.addEventListener('click', closeAdminMode);
 
   dom.shadeEditorApply.addEventListener('click', applyShadeEditor);
@@ -3214,15 +2816,14 @@ function wireEvents() {
   dom.shadeEditorHex.addEventListener('input', () => {
     const norm = normalizeHex(dom.shadeEditorHex.value);
     if (norm) {
-      dom.shadeEditorPicker.value = norm.toLowerCase();
+      dom.shadeEditorPicker.value = norm;
       updateShadeEditorPreview(norm, Number(dom.shadeEditorDarkness.value));
     }
   });
 
   dom.shadeEditorPicker.addEventListener('input', () => {
-    const picked = dom.shadeEditorPicker.value.toUpperCase();
-    dom.shadeEditorHex.value = picked;
-    updateShadeEditorPreview(picked, Number(dom.shadeEditorDarkness.value));
+    dom.shadeEditorHex.value = dom.shadeEditorPicker.value.toUpperCase();
+    updateShadeEditorPreview(dom.shadeEditorPicker.value, Number(dom.shadeEditorDarkness.value));
   });
 
   dom.shadeEditorDarkness.addEventListener('input', () => {
